@@ -1,5 +1,7 @@
 # Comandos para levantar PostgreSQL
 
+El archivo `../Database/scheme.sql` se ejecuta automaticamente al inicializar la base en un volumen vacio.
+
 ## 1) Levantar el contenedor
 
 docker compose -f compose.yml up -d
@@ -21,3 +23,9 @@ docker compose -f compose.yml down
 ## 5) Detener y eliminar datos (volumen)
 
 docker compose -f compose.yml down -v
+
+## 6) Reinicializar y volver a ejecutar el script SQL
+
+docker compose -f compose.yml down -v
+
+docker compose -f compose.yml up -d

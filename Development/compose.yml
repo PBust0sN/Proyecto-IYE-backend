@@ -11,6 +11,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - iye-db:/var/lib/postgresql/data
+      - ../Database/scheme.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     networks:
       - default
     deploy:
