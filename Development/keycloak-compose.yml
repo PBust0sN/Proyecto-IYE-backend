@@ -19,8 +19,16 @@ services:
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HTTP_PORT: "8080"
+      # ── Health ───────────────────────────────────────────────
+      KC_HEALTH_ENABLED: "true"
     networks:
       - iye-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health/ready || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
     deploy:
       resources:
         limits:
