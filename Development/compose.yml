@@ -13,8 +13,9 @@ services:
       - iye-db:/var/lib/postgresql/data
       - ../Database/scheme.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ../Database/data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+      - ../Database/keycloak-init.sql:/docker-entrypoint-initdb.d/03-keycloak-init.sql:ro
     networks:
-      - default
+      - iye-net
     deploy:
       resources:
         limits:
@@ -32,3 +33,8 @@ services:
 
 volumes:
   iye-db:
+
+networks:
+  iye-net:
+    name: iye-net
+    driver: bridge
