@@ -8,7 +8,7 @@
 # ── Detección de sistema operativo ────────────────────────────
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
-    GRADLEW_CMD := gradlew.bat
+    GRADLEW_CMD := ./gradlew
     SHELL       := bash.exe
 else
     DETECTED_OS := Linux
