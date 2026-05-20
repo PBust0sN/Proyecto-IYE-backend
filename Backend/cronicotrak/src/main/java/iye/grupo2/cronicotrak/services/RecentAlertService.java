@@ -20,7 +20,9 @@ public class RecentAlertService {
     private final PacientePatologiaRepository pacientePatologiaRepository;
 
     public List<RecentAlertDto> getTodayAlerts() {
-        List<Alerta> alertas = alertaRepository.findTodayAlerts();
+        LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        List<Alerta> alertas = alertaRepository.findTodayAlerts(startOfDay, endOfDay);
         
         return alertas.stream()
                 .map(this::convertToDto)
