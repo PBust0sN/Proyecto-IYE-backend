@@ -36,4 +36,10 @@ public class AlertaService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public List<String> findAlertLevelsByPacienteId(Long pacienteId) {
+        return repository.findByPacienteId(pacienteId).stream()
+                .map(alerta -> alerta.getTipo() + ": " + alerta.getDescripcion())
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

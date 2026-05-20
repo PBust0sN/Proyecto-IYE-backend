@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PrediccionRepository extends JpaRepository<Prediccion, Long> {
+    java.util.List<Prediccion> findByPacienteId(Long pacienteId);
 }

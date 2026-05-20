@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlertaRepository extends JpaRepository<Alerta, Long> {
+    java.util.List<Alerta> findByPacienteId(Long pacienteId);
 }

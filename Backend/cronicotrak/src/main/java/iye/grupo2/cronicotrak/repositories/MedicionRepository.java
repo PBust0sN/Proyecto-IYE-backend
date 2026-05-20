@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MedicionRepository extends JpaRepository<Medicion, Long> {
+    java.util.Optional<Medicion> findFirstByPacienteIdOrderByFechaDesc(Long pacienteId);
 }
