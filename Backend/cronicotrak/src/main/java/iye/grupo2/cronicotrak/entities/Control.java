@@ -24,6 +24,10 @@ public class Control {
     @Column(name = "fecha_programada")
     private LocalDate fechaProgramada;
 
+    private String tipo;
+    private String prioridad;
+    private String doctor;
+    
     @Column(name = "fecha_real")
     private LocalDate fechaReal;
 

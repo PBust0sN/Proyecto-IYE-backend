@@ -1,5 +1,6 @@
 package iye.grupo2.cronicotrak.controllers;
 
+import iye.grupo2.cronicotrak.DTO.FutureAppointmentDTO;
 import iye.grupo2.cronicotrak.entities.Control;
 import iye.grupo2.cronicotrak.services.ControlService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ControlController {
     private final ControlService service;
+
+    @GetMapping("/future/appointments")
+    public List<FutureAppointmentDTO> findFutureAppointmentsDTO() {
+        return service.findFutureAppointmentsDTO();
+    }
 
     @GetMapping
     public List<Control> findAll() {
