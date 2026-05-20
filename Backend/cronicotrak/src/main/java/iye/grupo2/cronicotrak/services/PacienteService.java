@@ -2,6 +2,7 @@ package iye.grupo2.cronicotrak.services;
 
 import iye.grupo2.cronicotrak.DTO.GETPatient;
 import iye.grupo2.cronicotrak.DTO.PatientDetailDTO;
+import iye.grupo2.cronicotrak.DTO.PatientQuantityDTO;
 import iye.grupo2.cronicotrak.entities.Paciente;
 import iye.grupo2.cronicotrak.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,10 @@ public class PacienteService {
     private final MedicionService medicionService;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public List<PatientQuantityDTO> getPatientsQuantities() {
+        return repository.countPatientsByStatus();
+    }
 
     public PatientDetailDTO findPatientDetailById(Long id) {
         return repository.findById(id)

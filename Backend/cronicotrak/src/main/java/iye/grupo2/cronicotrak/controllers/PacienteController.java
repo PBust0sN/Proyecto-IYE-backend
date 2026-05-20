@@ -2,6 +2,7 @@ package iye.grupo2.cronicotrak.controllers;
 
 import iye.grupo2.cronicotrak.DTO.GETPatient;
 import iye.grupo2.cronicotrak.DTO.PatientDetailDTO;
+import iye.grupo2.cronicotrak.DTO.PatientQuantityDTO;
 import iye.grupo2.cronicotrak.entities.Paciente;
 import iye.grupo2.cronicotrak.services.PacienteService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PacienteController {
     private final PacienteService service;
+
+    @GetMapping("/patients/quantities")
+    public List<PatientQuantityDTO> getPatientsQuantities() {
+        return service.getPatientsQuantities();
+    }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<PatientDetailDTO> findPatientDetailById(@PathVariable Long id) {
