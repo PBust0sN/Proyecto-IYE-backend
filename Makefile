@@ -60,7 +60,7 @@ help:
 # ──────────────────────────────────────────────────────────────
 db: _check-env
 	@printf "$(YELLOW)▶ Levantando PostgreSQL...$(RESET)\n"
-	docker compose -f $(COMPOSE_DIR)/compose.yml up -d
+	docker compose -f $(COMPOSE_DIR)/compose.yml up -d iye-db
 	@printf "$(GREEN)✔ PostgreSQL listo$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ db: _check-env
 # ──────────────────────────────────────────────────────────────
 db-stop:
 	@printf "$(YELLOW)▶ Deteniendo PostgreSQL...$(RESET)\n"
-	docker compose -f $(COMPOSE_DIR)/compose.yml down
+	docker compose -f $(COMPOSE_DIR)/compose.yml stop iye-db
 	@printf "$(GREEN)✔ PostgreSQL detenido$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
@@ -90,12 +90,17 @@ backend: _check-env _wait-db _gradlew-perms
 # ──────────────────────────────────────────────────────────────
 ## Levanta DB + Keycloak + backend
 # ──────────────────────────────────────────────────────────────
-start: db kc backend
+start: _check-env
+	@printf "$(YELLOW)▶ Levantando infraestructura integrada (DB + Keycloak)...$(RESET)\n"
+	docker compose -f $(COMPOSE_DIR)/compose.yml up -d
+	@$(MAKE) backend
 
 # ──────────────────────────────────────────────────────────────
-## Detiene DB + Keycloak
+## Detiene toda la infraestructura (DB + Keycloak)
 # ──────────────────────────────────────────────────────────────
-stop: kc-stop db-stop
+stop:
+	@printf "$(YELLOW)▶ Deteniendo toda la infraestructura...$(RESET)\n"
+	docker compose -f $(COMPOSE_DIR)/compose.yml down
 	@printf "$(GREEN)✔ Todo detenido$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
@@ -108,17 +113,15 @@ logs:
 ## Estado de todos los contenedores (DB + Keycloak)
 # ──────────────────────────────────────────────────────────────
 ps:
-	@printf "$(CYAN)── PostgreSQL ──────────────────────────────$(RESET)\n"
+	@printf "$(CYAN)── Infraestructura iye ──────────────────────$(RESET)\n"
 	docker compose -f $(COMPOSE_DIR)/compose.yml ps
-	@printf "$(CYAN)── Keycloak ────────────────────────────────$(RESET)\n"
-	docker compose -f $(COMPOSE_DIR)/keycloak-compose.yml ps 2>/dev/null || true
 
 # ──────────────────────────────────────────────────────────────
-## Levanta Keycloak (requiere que la DB ya esté corriendo)
+## Levanta Keycloak (levantará automáticamente la DB si no está corriendo)
 # ──────────────────────────────────────────────────────────────
 kc: _check-env
 	@printf "$(YELLOW)▶ Levantando Keycloak 26.6.1...$(RESET)\n"
-	docker compose -f $(COMPOSE_DIR)/keycloak-compose.yml up -d
+	docker compose -f $(COMPOSE_DIR)/compose.yml up -d iye-keycloak
 	@printf "$(GREEN)✔ Keycloak disponible en http://localhost:8180$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
@@ -126,14 +129,14 @@ kc: _check-env
 # ──────────────────────────────────────────────────────────────
 kc-stop:
 	@printf "$(YELLOW)▶ Deteniendo Keycloak...$(RESET)\n"
-	docker compose -f $(COMPOSE_DIR)/keycloak-compose.yml down
+	docker compose -f $(COMPOSE_DIR)/compose.yml stop iye-keycloak
 	@printf "$(GREEN)✔ Keycloak detenido$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
 ## Logs de Keycloak en tiempo real
 # ──────────────────────────────────────────────────────────────
 kc-logs:
-	docker compose -f $(COMPOSE_DIR)/keycloak-compose.yml logs -f iye-keycloak
+	docker compose -f $(COMPOSE_DIR)/compose.yml logs -f iye-keycloak
 
 # ──────────────────────────────────────────────────────────────
 ## Muestra las variables que Spring recibirá desde el .env
