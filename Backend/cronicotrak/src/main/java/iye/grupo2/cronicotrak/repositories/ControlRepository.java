@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,13 @@ public interface ControlRepository extends JpaRepository<Control, Long> {
 
     @Query("SELECT c FROM Control c WHERE c.paciente.id = :pacienteId AND c.fechaProgramada >= :today ORDER BY c.fechaProgramada ASC LIMIT 1")
     Optional<Control> findNextControlByPacienteId(@Param("pacienteId") Long pacienteId, @Param("today") LocalDate today);
+
+    @Query("SELECT COUNT(c) FROM Control c WHERE c.fechaReal = :fecha")
+    long countByFechaReal(LocalDate fecha);
+
+    @Query("SELECT COUNT(c) FROM Control c WHERE c.asistio = true")
+    long countByAsistioTrue();
+
+    @Query("SELECT c FROM Control c WHERE c.asistio = true")
+    List<Control> findAllControlled();
 }

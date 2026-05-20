@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +36,18 @@ public class ControlService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public long countTodayFollowups() {
+        return repository.countByFechaReal(LocalDate.now());
+    }
+
+    public double getControlRate() {
+        long totalControls = repository.count();
+        if (totalControls == 0) {
+            return 0.0;
+        }
+        long controlsCompleted = repository.countByAsistioTrue();
+        return (double) controlsCompleted / totalControls;
     }
 }

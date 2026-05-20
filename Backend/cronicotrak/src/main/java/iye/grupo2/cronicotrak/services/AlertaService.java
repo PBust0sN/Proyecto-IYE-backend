@@ -36,4 +36,8 @@ public class AlertaService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public long countActiveAlerts() {
+        return repository.countByResueltaFalse();
+    }
 }
