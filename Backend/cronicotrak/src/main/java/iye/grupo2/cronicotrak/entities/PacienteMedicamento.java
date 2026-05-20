@@ -1,6 +1,7 @@
 package iye.grupo2.cronicotrak.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Entity
@@ -14,12 +15,14 @@ public class PacienteMedicamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "paciente_id")
+    @JsonIgnore
     private Paciente paciente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "medicamento_id")
+    @JsonIgnore
     private Medicamento medicamento;
 
     private String dosis;

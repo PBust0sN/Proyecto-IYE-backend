@@ -1,6 +1,7 @@
 package iye.grupo2.cronicotrak.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Entity
@@ -19,7 +20,8 @@ public class Usuario {
     private String password;
     private String rol;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "establecimiento_id")
     private Establecimiento establecimiento;
 }

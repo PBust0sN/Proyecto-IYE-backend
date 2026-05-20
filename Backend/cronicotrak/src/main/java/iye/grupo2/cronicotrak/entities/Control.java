@@ -1,6 +1,7 @@
 package iye.grupo2.cronicotrak.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -15,7 +16,8 @@ public class Control {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
@@ -27,7 +29,8 @@ public class Control {
 
     private Boolean asistio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 }
