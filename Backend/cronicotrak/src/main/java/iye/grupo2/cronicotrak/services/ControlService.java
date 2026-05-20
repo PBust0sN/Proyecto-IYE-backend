@@ -41,4 +41,13 @@ public class ControlService {
     public long countTodayFollowups() {
         return repository.countByFechaReal(LocalDate.now());
     }
+
+    public double getControlRate() {
+        long totalControls = repository.count();
+        if (totalControls == 0) {
+            return 0.0;
+        }
+        long controlsCompleted = repository.countByAsistioTrue();
+        return (double) controlsCompleted / totalControls;
+    }
 }

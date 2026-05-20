@@ -52,4 +52,12 @@ public class ControlController {
         response.put("quantity", quantity);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/get/controlrate")
+    public ResponseEntity<Map<String, Double>> getControlRate() {
+        double controlRate = service.getControlRate();
+        Map<String, Double> response = new HashMap<>();
+        response.put("controlRate", Math.round(controlRate * 100.0) / 100.0);
+        return ResponseEntity.ok(response);
+    }
 }

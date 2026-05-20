@@ -10,4 +10,7 @@ import java.time.LocalDate;
 public interface ControlRepository extends JpaRepository<Control, Long> {
     @Query("SELECT COUNT(c) FROM Control c WHERE c.fechaReal = :fecha")
     long countByFechaReal(LocalDate fecha);
+    
+    @Query("SELECT COUNT(c) FROM Control c WHERE c.asistio = true")
+    long countByAsistioTrue();
 }
