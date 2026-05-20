@@ -1,7 +1,9 @@
 package iye.grupo2.cronicotrak.controllers;
 
+import iye.grupo2.cronicotrak.dtos.RecentAlertDto;
 import iye.grupo2.cronicotrak.entities.Alerta;
 import iye.grupo2.cronicotrak.services.AlertaService;
+import iye.grupo2.cronicotrak.services.RecentAlertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AlertaController {
     private final AlertaService service;
+    private final RecentAlertService recentAlertService;
 
     @GetMapping
     public List<Alerta> findAll() {
@@ -51,5 +54,11 @@ public class AlertaController {
         Map<String, Long> response = new HashMap<>();
         response.put("quantity", quantity);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get/recent/alerts")
+    public ResponseEntity<List<RecentAlertDto>> getRecentAlerts() {
+        List<RecentAlertDto> alerts = recentAlertService.getTodayAlerts();
+        return ResponseEntity.ok(alerts);
     }
 }

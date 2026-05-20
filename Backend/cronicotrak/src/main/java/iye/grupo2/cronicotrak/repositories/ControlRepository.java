@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ControlRepository extends JpaRepository<Control, Long> {
@@ -13,4 +14,7 @@ public interface ControlRepository extends JpaRepository<Control, Long> {
     
     @Query("SELECT COUNT(c) FROM Control c WHERE c.asistio = true")
     long countByAsistioTrue();
+    
+    @Query("SELECT c FROM Control c WHERE c.asistio = true")
+    List<Control> findAllControlled();
 }
