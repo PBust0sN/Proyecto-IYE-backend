@@ -3,6 +3,7 @@ package iye.grupo2.cronicotrak.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "paciente")
@@ -17,11 +18,17 @@ public class Paciente {
 
     private String rut;
     private String nombre;
+    private Integer age;
+    private String status;
+    private String room;
+    private String phone;
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
+    
+    private LocalDateTime lastVisit;
+    private LocalDateTime nextVisit;
 
-    private String telefono;
     private String direccion;
 
     @ManyToOne(fetch = FetchType.LAZY)
