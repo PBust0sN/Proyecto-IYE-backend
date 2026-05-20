@@ -1,18 +1,40 @@
 package iye.grupo2.cronicotrak.services;
 
+import iye.grupo2.cronicotrak.DTO.FutureAppointmentDTO;
 import iye.grupo2.cronicotrak.entities.Control;
 import iye.grupo2.cronicotrak.repositories.ControlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
 public class ControlService {
     private final ControlRepository repository;
+
+    public List<FutureAppointmentDTO> findFutureAppointmentsDTO() {
+        return repository.findByFechaProgramadaGreaterThanEqualOrderByFechaProgramadaAsc(LocalDate.now()).stream()
+                .map(this::mapToFutureAppointmentDTO)
+                .collect(Collectors.toList());
+    }
+
+    private FutureAppointmentDTO mapToFutureAppointmentDTO(Control control) {
+        return FutureAppointmentDTO.builder()
+                .id(control.getId().intValue())
+                .patient(control.getPaciente() != null ? control.getPaciente().getNombre() : "Unknown")
+                .date(control.getFechaProgramada() != null ? control.getFechaProgramada().toString() : "N/A")
+                .time("09:00") // Valor por defecto ya que no hay campo de hora en la entidad
+                .type(control.getTipo() != null ? control.getTipo() : "General")
+                .doctor(control.getDoctor() != null ? control.getDoctor() : "TBD")
+                .room(control.getPaciente() != null ? control.getPaciente().getRoom() : "N/A")
+                .priority(control.getPrioridad() != null ? control.getPrioridad() : "medium")
+                .build();
+    }
 
     public List<Control> findAll() {
         return repository.findAll();

@@ -36,4 +36,10 @@ public class PacientePatologiaService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public List<String> findPatologiasByPacienteId(Long pacienteId) {
+        return repository.findByPacienteId(pacienteId).stream()
+                .map(pp -> pp.getPatologia().getNombre())
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

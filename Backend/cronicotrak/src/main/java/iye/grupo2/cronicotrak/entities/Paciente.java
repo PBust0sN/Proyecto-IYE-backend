@@ -2,8 +2,10 @@ package iye.grupo2.cronicotrak.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,14 +21,26 @@ public class Paciente {
 
     private String rut;
     private String nombre;
+    private Integer age;
+    private String status;
+    private String room;
+
+    @Column(name = "telefono")
+    private String phone;
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
+    
+    @Column(name = "last_visit")
+    private LocalDateTime lastVisit;
 
-    private String telefono;
+    @Column(name = "next_visit")
+    private LocalDateTime nextVisit;
+
     private String direccion;
     private String email;
 
+    @ManyToOne
     @Column(name = "tipo_sangre")
     private String tipoSangre;
 
@@ -50,5 +64,6 @@ public class Paciente {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "establecimiento_id")
+    @JsonIgnore
     private Establecimiento establecimiento;
 }

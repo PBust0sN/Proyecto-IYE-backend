@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PrediccionRepository extends JpaRepository<Prediccion, Long> {
+    java.util.List<Prediccion> findByPacienteId(Long pacienteId);
     @Query("SELECT p FROM Prediccion p WHERE p.riesgoDescompensacion >= 0.7")
     List<Prediccion> findAllDecompensated();
 }

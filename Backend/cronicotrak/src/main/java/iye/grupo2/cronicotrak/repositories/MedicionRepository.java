@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface MedicionRepository extends JpaRepository<Medicion, Long> {
+    java.util.Optional<Medicion> findFirstByPacienteIdOrderByFechaDesc(Long pacienteId);
     List<Medicion> findByPacienteIdAndIndicadorId(Long pacienteId, Long indicadorId);
 
     @Query("SELECT m FROM Medicion m WHERE m.paciente.id = :pacienteId AND m.indicador.id = :indicadorId ORDER BY m.fecha DESC LIMIT 1")

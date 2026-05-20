@@ -36,4 +36,10 @@ public class MedicionService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public String findLatestMeasurementByPacienteId(Long pacienteId) {
+        return repository.findFirstByPacienteIdOrderByFechaDesc(pacienteId)
+                .map(medicion -> medicion.getValor().toString() + " " + (medicion.getIndicador() != null ? medicion.getIndicador().getUnidad() : ""))
+                .orElse("No measurements");
+    }
 }

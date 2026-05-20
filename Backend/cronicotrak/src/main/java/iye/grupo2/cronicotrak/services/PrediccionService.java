@@ -36,4 +36,10 @@ public class PrediccionService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public List<String> findPatternsByPacienteId(Long pacienteId) {
+        return repository.findByPacienteId(pacienteId).stream()
+                .map(iye.grupo2.cronicotrak.entities.Prediccion::getCluster)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

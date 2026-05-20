@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ControlRepository extends JpaRepository<Control, Long> {
+    java.util.List<Control> findByFechaProgramadaGreaterThanEqualOrderByFechaProgramadaAsc(java.time.LocalDate date);
 
     @Query("SELECT c FROM Control c WHERE c.paciente.id = :pacienteId AND c.fechaReal IS NOT NULL ORDER BY c.fechaReal DESC LIMIT 1")
     Optional<Control> findLastControlByPacienteId(@Param("pacienteId") Long pacienteId);

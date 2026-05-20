@@ -3,9 +3,9 @@ spring:
     name: cronicotrak
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME:iye}
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:iye-db}
     username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:postgres}
+    password: ${DB_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 20000

@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface AlertaRepository extends JpaRepository<Alerta, Long> {
+    java.util.List<Alerta> findByPacienteId(Long pacienteId);
     long countByResueltaFalse();
     
     @Query("SELECT a FROM Alerta a")
