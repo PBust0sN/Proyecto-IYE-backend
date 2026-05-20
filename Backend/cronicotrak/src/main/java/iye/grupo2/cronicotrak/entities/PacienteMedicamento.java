@@ -1,5 +1,6 @@
 package iye.grupo2.cronicotrak.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -15,14 +16,14 @@ public class PacienteMedicamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "paciente_id")
     @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    @ManyToOne
-    @JoinColumn(name = "medicamento_id")
     @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medicamento_id")
     private Medicamento medicamento;
 
     private String dosis;

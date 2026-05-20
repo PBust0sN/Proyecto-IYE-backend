@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/control")
@@ -47,5 +49,21 @@ public class ControlController {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/get/followup/quantity")
+    public ResponseEntity<Map<String, Long>> getFollowupQuantity() {
+        long quantity = service.countTodayFollowups();
+        Map<String, Long> response = new HashMap<>();
+        response.put("quantity", quantity);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get/controlrate")
+    public ResponseEntity<Map<String, Double>> getControlRate() {
+        double controlRate = service.getControlRate();
+        Map<String, Double> response = new HashMap<>();
+        response.put("controlRate", Math.round(controlRate * 100.0) / 100.0);
+        return ResponseEntity.ok(response);
     }
 }

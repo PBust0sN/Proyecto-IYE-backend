@@ -89,4 +89,8 @@ public class PacienteService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public long countAll() {
+        return repository.count();
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/paciente")
@@ -60,5 +62,13 @@ public class PacienteController {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/get/all/patients/quantity")
+    public ResponseEntity<Map<String, Long>> getPatientsQuantity() {
+        long quantity = service.countAll();
+        Map<String, Long> response = new HashMap<>();
+        response.put("quantity", quantity);
+        return ResponseEntity.ok(response);
     }
 }
