@@ -16,11 +16,9 @@ TRUNCATE TABLE "recordatorio" CASCADE;
 TRUNCATE TABLE "sincronizacion_offline" CASCADE;
 TRUNCATE TABLE "usuario" CASCADE;
 
-INSERT INTO "alerta" ("id", "paciente_id", "tipo", "descripcion", "fecha", "resuelta") VALUES
-;
 
-INSERT INTO "control" ("id", "paciente_id", "fecha_programada", "fecha_real", "asistio", "usuario_id") VALUES
-;
+
+
 
 INSERT INTO "establecimiento" ("id", "nombre", "tipo", "direccion", "comuna", "region") VALUES
 (1, 'CECOSF El Mirador General Lagos', 'CECOSF', 'Irarrázaval 1962', 'General Lagos', 'Arica y Parinacota'),
@@ -263,8 +261,7 @@ INSERT INTO "recordatorio" ("id", "paciente_id", "tipo", "canal", "fecha_envio",
 (19, 19945, 'control_programado', 'whatsapp', '2024-08-15T02:27:34.906Z', 'leido'),
 (20, 19945, 'control_programado', 'whatsapp', '2024-08-21T01:51:30.688Z', 'leido');
 
-INSERT INTO "sincronizacion_offline" ("id", "entidad", "entidad_id", "operacion", "fecha", "sincronizado") VALUES
-;
+
 
 INSERT INTO "usuario" ("id", "nombre", "email", "password", "rol", "establecimiento_id") VALUES
 (1, 'Gerardo Espinoza Pacheco', 'gerardo.espinoza@redsalud.gob.cl', '$2b$10$lvabrj08tpyv2bgw8gcwb', 'Administrativo', 99),
