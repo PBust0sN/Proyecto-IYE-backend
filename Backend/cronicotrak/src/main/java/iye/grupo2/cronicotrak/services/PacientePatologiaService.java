@@ -4,12 +4,14 @@ import iye.grupo2.cronicotrak.entities.PacientePatologia;
 import iye.grupo2.cronicotrak.repositories.PacientePatologiaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PacientePatologiaService {
     private final PacientePatologiaRepository repository;
 
@@ -21,10 +23,12 @@ public class PacientePatologiaService {
         return repository.findById(id);
     }
 
+    @Transactional
     public PacientePatologia save(PacientePatologia entity) {
         return repository.save(entity);
     }
 
+    @Transactional
     public PacientePatologia update(Long id, PacientePatologia entity) {
         if (repository.existsById(id)) {
             entity.setId(id);
@@ -33,6 +37,7 @@ public class PacientePatologiaService {
         return null;
     }
 
+    @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

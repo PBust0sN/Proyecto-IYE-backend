@@ -7,6 +7,7 @@ import iye.grupo2.cronicotrak.entities.Paciente;
 import iye.grupo2.cronicotrak.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PacienteService {
     private final PacienteRepository repository;
     private final PacientePatologiaService pacientePatologiaService;
@@ -74,10 +76,12 @@ public class PacienteService {
         return repository.findById(id);
     }
 
+    @Transactional
     public Paciente save(Paciente entity) {
         return repository.save(entity);
     }
 
+    @Transactional
     public Paciente update(Long id, Paciente entity) {
         if (repository.existsById(id)) {
             entity.setId(id);
@@ -86,6 +90,7 @@ public class PacienteService {
         return null;
     }
 
+    @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

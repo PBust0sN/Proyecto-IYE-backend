@@ -29,7 +29,7 @@ CYAN   := \033[0;36m
 RED    := \033[0;31m
 RESET  := \033[0m
 
-.PHONY: help db db-stop backend start stop clean logs ps env-check kc kc-stop kc-logs _check-env _wait-db _gradlew-perms
+.PHONY: help db db-stop backend start dev stop clean logs ps env-check kc kc-stop kc-logs docker-build _check-env _wait-db _gradlew-perms
 
 # ──────────────────────────────────────────────────────────────
 ## Muestra esta ayuda
@@ -41,18 +41,20 @@ help:
 	@printf "$(CYAN)║     OS detectado: %-18s║\n$(RESET)" "$(DETECTED_OS)"
 	@printf "$(CYAN)╚══════════════════════════════════════╝\n$(RESET)"
 	@printf "\n"
-	@printf "  $(GREEN)make start$(RESET)    → Levanta DB + backend (en orden)\n"
-	@printf "  $(GREEN)make stop$(RESET)     → Detiene todo\n"
-	@printf "  $(GREEN)make db$(RESET)       → Solo levanta PostgreSQL\n"
-	@printf "  $(GREEN)make db-stop$(RESET)  → Solo detiene PostgreSQL\n"
-	@printf "  $(GREEN)make backend$(RESET)  → Solo levanta Spring Boot\n"
-	@printf "  $(GREEN)make kc$(RESET)       → Levanta Keycloak\n"
-	@printf "  $(GREEN)make kc-stop$(RESET)  → Detiene Keycloak\n"
-	@printf "  $(GREEN)make kc-logs$(RESET)  → Logs de Keycloak en tiempo real\n"
-	@printf "  $(GREEN)make logs$(RESET)     → Logs de Postgres en tiempo real\n"
-	@printf "  $(GREEN)make ps$(RESET)       → Estado de todos los contenedores\n"
-	@printf "  $(GREEN)make env-check$(RESET)→ Muestra las variables de entorno cargadas\n"
-	@printf "  $(GREEN)make clean$(RESET)    → Limpia build del backend\n"
+	@printf "  $(GREEN)make start$(RESET)         → Levanta TODO en Docker (DB + Keycloak + Backend)\n"
+	@printf "  $(GREEN)make dev$(RESET)           → Levanta DB + Keycloak en Docker y Backend localmente\n"
+	@printf "  $(GREEN)make stop$(RESET)          → Detiene todo\n"
+	@printf "  $(GREEN)make db$(RESET)            → Solo levanta PostgreSQL\n"
+	@printf "  $(GREEN)make db-stop$(RESET)       → Solo detiene PostgreSQL\n"
+	@printf "  $(GREEN)make backend$(RESET)       → Solo levanta Spring Boot localmente\n"
+	@printf "  $(GREEN)make kc$(RESET)            → Levanta Keycloak\n"
+	@printf "  $(GREEN)make kc-stop$(RESET)       → Detiene Keycloak\n"
+	@printf "  $(GREEN)make kc-logs$(RESET)       → Logs de Keycloak en tiempo real\n"
+	@printf "  $(GREEN)make logs$(RESET)          → Logs de Postgres en tiempo real\n"
+	@printf "  $(GREEN)make ps$(RESET)            → Estado de todos los contenedores\n"
+	@printf "  $(GREEN)make env-check$(RESET)    → Muestra las variables de entorno cargadas\n"
+	@printf "  $(GREEN)make docker-build$(RESET) → Construye la imagen de Docker del backend\n"
+	@printf "  $(GREEN)make clean$(RESET)         → Limpia build del backend\n"
 	@printf "\n"
 
 # ──────────────────────────────────────────────────────────────
@@ -88,11 +90,22 @@ backend: _check-env _wait-db _gradlew-perms
 	fi
 
 # ──────────────────────────────────────────────────────────────
-## Levanta DB + Keycloak + backend
+## Levanta TODO en Docker (DB + Keycloak + Backend)
 # ──────────────────────────────────────────────────────────────
 start: _check-env
-	@printf "$(YELLOW)▶ Levantando infraestructura integrada (DB + Keycloak)...$(RESET)\n"
+	@printf "$(YELLOW)▶ Levantando toda la infraestructura en Docker (DB + Keycloak + Backend)...$(RESET)\n"
 	docker compose -f $(COMPOSE_DIR)/compose.yml up -d
+	@printf "$(GREEN)✔ Infraestructura completa levantada en segundo plano$(RESET)\n"
+	@printf "  - $(CYAN)Backend$(RESET) en: http://localhost:8080\n"
+	@printf "  - $(CYAN)Keycloak$(RESET) en: http://localhost:8180\n"
+	@printf "  - $(CYAN)PostgreSQL$(RESET) en: localhost:5432\n"
+
+# ──────────────────────────────────────────────────────────────
+## Levanta DB + Keycloak en Docker y corre el Backend localmente
+# ──────────────────────────────────────────────────────────────
+dev: _check-env
+	@printf "$(YELLOW)▶ Levantando servicios auxiliares en Docker (DB + Keycloak)...$(RESET)\n"
+	docker compose -f $(COMPOSE_DIR)/compose.yml up -d iye-db iye-keycloak
 	@$(MAKE) backend
 
 # ──────────────────────────────────────────────────────────────
@@ -159,6 +172,14 @@ clean:
 	@printf "$(YELLOW)▶ Limpiando build...$(RESET)\n"
 	cd "$(BACKEND_DIR)" && $(GRADLEW_CMD) clean
 	@printf "$(GREEN)✔ Build limpio$(RESET)\n"
+
+# ──────────────────────────────────────────────────────────────
+## Construye la imagen Docker del backend optimizada
+# ──────────────────────────────────────────────────────────────
+docker-build:
+	@printf "$(YELLOW)▶ Construyendo imagen Docker para el Backend...$(RESET)\n"
+	docker build --load -t cronicotrak-backend -f $(BACKEND_DIR)/Dockerfile $(BACKEND_DIR)
+	@printf "$(GREEN)✔ Imagen cronicotrak-backend construida con éxito$(RESET)\n"
 
 # ── Internos ───────────────────────────────────────────────────
 

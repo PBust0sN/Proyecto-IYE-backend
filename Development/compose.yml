@@ -63,7 +63,7 @@ services:
     networks:
       - iye-net
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health/ready || exit 1"]
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e \"GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q \"200 OK\""]
       interval: 15s
       timeout: 10s
       retries: 12
@@ -76,6 +76,41 @@ services:
         reservations:
           memory: 256M
           cpus: "0.25"
+
+  iye-backend:
+    image: cronicotrak-backend:latest
+    container_name: cronicotrak-backend
+    restart: unless-stopped
+    build:
+      context: ../Backend/cronicotrak
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # ── Base de datos ────────────────────────────────────────
+      DB_HOST: iye-db
+      DB_NAME: ${DB_NAME:-iye-db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-admin}
+      # ── Keycloak ─────────────────────────────────────────────
+      KC_ISSUER_URI: http://iye-keycloak:8080/realms/iye
+      # ── CORS ─────────────────────────────────────────────────
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    depends_on:
+      iye-db:
+        condition: service_healthy
+      iye-keycloak:
+        condition: service_healthy
+    networks:
+      - iye-net
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.50"
+        reservations:
+          memory: 256M
+          cpus: "0.10"
 
 volumes:
   iye-db:
