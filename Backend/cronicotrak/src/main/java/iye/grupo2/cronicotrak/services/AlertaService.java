@@ -41,6 +41,8 @@ public class AlertaService {
         return repository.findByPacienteId(pacienteId).stream()
                 .map(alerta -> alerta.getTipo() + ": " + alerta.getDescripcion())
                 .collect(java.util.stream.Collectors.toList());
+    }
+
     public long countActiveAlerts() {
         return repository.countByResueltaFalse();
     }

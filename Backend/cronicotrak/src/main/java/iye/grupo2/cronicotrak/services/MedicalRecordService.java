@@ -78,7 +78,7 @@ public class MedicalRecordService {
                             .lastVisit(lastVisit)
                             .nextVisit(nextVisit)
                             .room(paciente.getHabitacion())
-                            .phone(paciente.getTelefono())
+                            .phone(paciente.getPhone())
                             .mail(paciente.getEmail())
                             .address(paciente.getDireccion())
                             .bloodType(paciente.getTipoSangre())
@@ -100,7 +100,7 @@ public class MedicalRecordService {
                 .map(paciente -> {
                     // Actualiza datos básicos del paciente
                     paciente.setNombre(dto.getName());
-                    paciente.setTelefono(dto.getPhone());
+                    paciente.setPhone(dto.getPhone());
                     paciente.setEmail(dto.getMail());
                     paciente.setDireccion(dto.getAddress());
                     paciente.setTipoSangre(dto.getBloodType());
