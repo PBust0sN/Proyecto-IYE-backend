@@ -444,6 +444,38 @@
       ]
     }
   },
+  "users": [
+    {
+      "username": "r.martinez@sanrafael.com",
+      "enabled": true,
+      "email": "r.martinez@sanrafael.com",
+      "firstName": "Roberto",
+      "lastName": "Martínez",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "director123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [ "director", "default-roles-iye" ]
+    },
+    {
+      "username": "c.rodriguez@sanrafael.com",
+      "enabled": true,
+      "email": "c.rodriguez@sanrafael.com",
+      "firstName": "Carmen",
+      "lastName": "Rodríguez",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "enfermeria123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [ "nurse", "default-roles-iye" ]
+    }
+  ],
   "groups": [],
   "defaultRole": {
     "id": "24fd65a1-c522-4dd1-8e7f-4ab96c5cfb7b",

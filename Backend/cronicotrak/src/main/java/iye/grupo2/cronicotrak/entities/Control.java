@@ -2,7 +2,6 @@ package iye.grupo2.cronicotrak.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -28,7 +27,7 @@ public class Control {
     private String tipo;
     private String prioridad;
     private String doctor;
-    
+
     @Column(name = "fecha_real")
     private LocalDate fechaReal;
 
