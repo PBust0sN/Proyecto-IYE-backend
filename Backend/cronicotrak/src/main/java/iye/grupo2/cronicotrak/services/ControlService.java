@@ -5,6 +5,7 @@ import iye.grupo2.cronicotrak.entities.Control;
 import iye.grupo2.cronicotrak.repositories.ControlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ControlService {
     private final ControlRepository repository;
 
@@ -30,7 +32,7 @@ public class ControlService {
                 .time("09:00") // Valor por defecto ya que no hay campo de hora en la entidad
                 .type(control.getTipo() != null ? control.getTipo() : "General")
                 .doctor(control.getDoctor() != null ? control.getDoctor() : "TBD")
-                .room(control.getPaciente() != null ? control.getPaciente().getRoom() : "N/A")
+                .room(control.getPaciente() != null ? control.getPaciente().getHabitacion() : "N/A")
                 .priority(control.getPrioridad() != null ? control.getPrioridad() : "medium")
                 .build();
     }
@@ -43,10 +45,12 @@ public class ControlService {
         return repository.findById(id);
     }
 
+    @Transactional
     public Control save(Control entity) {
         return repository.save(entity);
     }
 
+    @Transactional
     public Control update(Long id, Control entity) {
         if (repository.existsById(id)) {
             entity.setId(id);
@@ -55,6 +59,7 @@ public class ControlService {
         return null;
     }
 
+    @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
