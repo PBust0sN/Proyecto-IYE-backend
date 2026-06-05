@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/Santiago
+      - TZ=America/Santiago
+      - N8N_SECURE_COOKIE=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  evolution-api:
+    image: atendai/evolution-api:v1.8.2
+    container_name: evolution-api
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      - AUTHENTICATION_API_KEY=clave_secreta_123
+    volumes:
+      - evolution_data:/evolution/instances
+
+volumes:
+  n8n_data:
+  evolution_data:
