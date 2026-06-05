@@ -409,6 +409,46 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "3. WhatsApp Integration",
+      "description": "Endpoints para integración con Evolution API y envío de WhatsApp.",
+      "item": [
+        {
+          "name": "Enviar Mensaje WhatsApp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": \"56977020724\",\n  \"mensaje\": \"¡Hola, paciente! Este es un recordatorio de Cronicotrak. 🚀\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/send",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "whatsapp",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
