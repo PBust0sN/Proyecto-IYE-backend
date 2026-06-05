@@ -28,4 +28,4 @@ docker logs evolution-api -f
 
 entrar a n8n en localhost:5678
 
-importar My workflow.json en n8n y ejecutar
+importar My workflow.json en n8n en el modulo "HTTP Request" editar el json y poner el numero que se le quiere enviar mensajes, luego ejecute y disfrute
