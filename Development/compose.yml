@@ -1,3 +1,5 @@
+name: cronicotrack
+
 services:
   iye-db:
     image: postgres:17-alpine
@@ -8,13 +10,14 @@ services:
     environment:
       POSTGRES_DB: ${DB_NAME:-iye}
       POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
     volumes:
       - iye-db:/var/lib/postgresql/data
       - ../Database/scheme.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ../Database/data.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+      - ../Database/keycloak-init.sql:/docker-entrypoint-initdb.d/03-keycloak-init.sql:ro
     networks:
-      - default
+      - iye-net
     deploy:
       resources:
         limits:
@@ -30,5 +33,109 @@ services:
       retries: 10
       start_period: 15s
 
+  iye-keycloak:
+    image: quay.io/keycloak/keycloak:26.6.1
+    container_name: iye-keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    volumes:
+      - ./iye-realm.json:/opt/keycloak/data/import/iye-realm.json:ro
+    ports:
+      - "8180:8080"
+    environment:
+      # ── Base de datos ────────────────────────────────────────
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://iye-db:5432/${KC_DB_NAME:-keycloak}
+      KC_DB_USERNAME: ${DB_USER:-postgres}
+      KC_DB_PASSWORD: ${DB_PASSWORD:-admin}
+      # ── Admin bootstrap (Keycloak 26+) ───────────────────────
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN_USER:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:-admin}
+      # ── HTTP / hostname ──────────────────────────────────────
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_PORT: "8080"
+      # ── Health ───────────────────────────────────────────────
+      KC_HEALTH_ENABLED: "true"
+    depends_on:
+      iye-db:
+        condition: service_healthy
+    networks:
+      - iye-net
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e \"GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q \"200 OK\""]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: "0.75"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  iye-backend:
+    image: cronicotrak-backend:latest
+    container_name: cronicotrak-backend
+    restart: unless-stopped
+    build:
+      context: ../Backend/cronicotrak
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # ── Base de datos ────────────────────────────────────────
+      DB_HOST: iye-db
+      DB_NAME: ${DB_NAME:-iye-db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-admin}
+      # ── Keycloak ─────────────────────────────────────────────
+      KC_ISSUER_URI: http://iye-keycloak:8080/realms/iye
+      # ── CORS ─────────────────────────────────────────────────
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      # ── Evolution API ────────────────────────────────────────
+      EVOLUTION_API_URL: http://iye-evolution-api:8080
+      EVOLUTION_API_KEY: clave_secreta_123
+      EVOLUTION_API_INSTANCE: mi_whatsapp
+    depends_on:
+      iye-db:
+        condition: service_healthy
+      iye-keycloak:
+        condition: service_healthy
+    networks:
+      - iye-net
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.50"
+        reservations:
+          memory: 256M
+          cpus: "0.10"
+
+  evolution-api:
+    image: atendai/evolution-api:v1.8.2
+    container_name: iye-evolution-api
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      - SERVER_URL=http://localhost:8081
+      - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=clave_secreta_123
+    networks:
+      - iye-net
+    volumes:
+      - iye-evolution-instances:/evolution/instances
+
 volumes:
   iye-db:
+  iye-evolution-instances:
+
+networks:
+  iye-net:
+    name: iye-net
+    driver: bridge

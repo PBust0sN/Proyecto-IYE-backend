@@ -1,0 +1,476 @@
+{
+  "info": {
+    "name": "Cronicotrak API",
+    "description": "Colección de Postman para probar la API de Cronicotrak. Incluye la configuración de autenticación OAuth2 mediante Keycloak.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "grant_type",
+        "value": "authorization_code",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "Keycloak Token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{keycloakBaseUrl}}/realms/{{realm}}/protocol/openid-connect/auth",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{keycloakBaseUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{clientId}}",
+        "type": "string"
+      },
+      {
+        "key": "scope",
+        "value": "openid profile email",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Director",
+      "description": "Endpoints compartidos con el Director para el panel de estadísticas y reportes.",
+      "item": [
+        {
+          "name": "Listar Pacientes (Resumen)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/paciente/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "paciente",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle de un Paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/paciente/detail/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "paciente",
+                "detail",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2",
+                  "description": "ID del paciente a consultar"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Próximas Citas y Controles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/control/future/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "control",
+                "future",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Distribución por Estado (Cantidades)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/paciente/patients/quantities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "paciente",
+                "patients",
+                "quantities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Total de Pacientes Registrados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/paciente/get/all/patients/quantity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "paciente",
+                "get",
+                "all",
+                "patients",
+                "quantity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cantidad de Alertas Activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerta/get/active/alerts/quantity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerta",
+                "get",
+                "active",
+                "alerts",
+                "quantity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cantidad de Seguimientos Pendientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/control/get/followup/quantity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "control",
+                "get",
+                "followup",
+                "quantity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasa de Control de Pacientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/control/get/controlrate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "control",
+                "get",
+                "controlrate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Histórico Mensual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/historic/get/historic",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "historic",
+                "get",
+                "historic"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Alertas Recientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerta/get/recent/alerts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerta",
+                "get",
+                "recent",
+                "alerts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Nurse",
+      "description": "Endpoints para Enfermero/a para el manejo directo de fichas médicas.",
+      "item": [
+        {
+          "name": "Listar Pacientes (Resumen)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/paciente/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "paciente",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Ficha Médica Completa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/medical/record/:idPatient",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "medical",
+                "record",
+                ":idPatient"
+              ],
+              "variable": [
+                {
+                  "key": "idPatient",
+                  "value": "5",
+                  "description": "ID del paciente"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Ficha Médica",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPatient\": 5,\n  \"name\": \"María García López\",\n  \"age\": 68,\n  \"status\": \"Controlado\",\n  \"lastVisit\": \"14/5/2026\",\n  \"nextVisit\": \"21/5/2026\",\n  \"room\": \"205\",\n  \"phone\": \"555-0102\",\n  \"mail\": \"maria.garcia@email.com\",\n  \"address\": \"Av. Principal 123, Santiago\",\n  \"bloodType\": \"O+\",\n  \"emergencyName\": \"Pedro García\",\n  \"emergencyPhone\": \"555-0102\",\n  \"alergies\": [\n    \"Penicilina\"\n  ],\n  \"actualMeds\": [\n    \"Metformina 850mg (2 veces al día)\",\n    \"Enalapril 10mg\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/medical/record/:idPatient",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "medical",
+                "record",
+                ":idPatient"
+              ],
+              "variable": [
+                {
+                  "key": "idPatient",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ocultar Ficha Médica (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/medical/record/:idPatient",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "medical",
+                "record",
+                ":idPatient"
+              ],
+              "variable": [
+                {
+                  "key": "idPatient",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. WhatsApp Integration",
+      "description": "Endpoints para integración con Evolution API y envío de WhatsApp.",
+      "item": [
+        {
+          "name": "Enviar Mensaje WhatsApp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": \"56977020724\",\n  \"mensaje\": \"¡Hola, paciente! Este es un recordatorio de Cronicotrak. 🚀\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/whatsapp/send",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "whatsapp",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "keycloakBaseUrl",
+      "value": "http://localhost:8180",
+      "type": "string"
+    },
+    {
+      "key": "realm",
+      "value": "iye",
+      "type": "string"
+    },
+    {
+      "key": "clientId",
+      "value": "iye-backend",
+      "type": "string"
+    }
+  ]
+}

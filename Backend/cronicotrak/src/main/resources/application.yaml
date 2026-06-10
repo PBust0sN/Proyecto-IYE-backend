@@ -1,3 +1,52 @@
 spring:
   application:
     name: cronicotrak
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:iye-db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Keycloak emite tokens con este issuer; Spring lo verifica en el claim "iss"
+          issuer-uri: ${KC_ISSUER_URI:http://localhost:8180/realms/iye}
+          # JWKS explícito para no bloquear el startup si Keycloak tarda en arrancar
+          jwk-set-uri: ${KC_ISSUER_URI:http://localhost:8180/realms/iye}/protocol/openid-connect/certs
+
+# ── CORS ──────────────────────────────────────────────────────────
+app:
+  cors:
+    allowed-origins: ${FRONTEND_URL:http://localhost:5173}
+
+# ── Actuator ───────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+# ── Evolution API ──────────────────────────────────────────────────
+evolution:
+  api:
+    url: ${EVOLUTION_API_URL:http://localhost:8081}
+    key: ${EVOLUTION_API_KEY:clave_secreta_123}
+    instance: ${EVOLUTION_API_INSTANCE:mi_whatsapp}

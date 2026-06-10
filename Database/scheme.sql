@@ -20,11 +20,29 @@ CREATE TABLE "paciente" (
   "id" int PRIMARY KEY,
   "rut" varchar,
   "nombre" varchar,
+  "age" int,
+  "status" varchar,
+  "room" varchar,
   "fecha_nacimiento" date,
+  "last_visit" timestamp,
+  "next_visit" timestamp,
   "telefono" varchar,
   "direccion" varchar,
+  "email" varchar,
+  "tipo_sangre" varchar,
+  "nombre_emergencia" varchar,
+  "telefono_emergencia" varchar,
+  "estado" varchar,
+  "habitacion" varchar,
+  "activo" boolean NOT NULL DEFAULT true,
   "establecimiento_id" int
 );
+
+CREATE TABLE "paciente_alergia" (
+  "paciente_id" int NOT NULL,
+  "alergia" varchar NOT NULL
+);
+
 
 CREATE TABLE "patologia" (
   "id" int PRIMARY KEY,
@@ -36,13 +54,18 @@ CREATE TABLE "paciente_patologia" (
   "id" int PRIMARY KEY,
   "paciente_id" int,
   "patologia_id" int,
-  "fecha_diagnostico" date
+  "fecha_diagnostico" date,
+  "notas" text,
+  "fecha_ultimo_control" date
 );
 
 CREATE TABLE "control" (
   "id" int PRIMARY KEY,
   "paciente_id" int,
   "fecha_programada" date,
+  "tipo" varchar,
+  "prioridad" varchar,
+  "doctor" varchar,
   "fecha_real" date,
   "asistio" boolean,
   "usuario_id" int
@@ -51,8 +74,12 @@ CREATE TABLE "control" (
 CREATE TABLE "indicador" (
   "id" int PRIMARY KEY,
   "nombre" varchar,
-  "unidad" varchar
+  "unidad" varchar,
+  "lower" decimal,
+  "upper" decimal,
+  "patologia_id" int
 );
+
 
 CREATE TABLE "medicion" (
   "id" int PRIMARY KEY,
@@ -145,3 +172,7 @@ ALTER TABLE "paciente_medicamento" ADD FOREIGN KEY ("paciente_id") REFERENCES "p
 ALTER TABLE "paciente_medicamento" ADD FOREIGN KEY ("medicamento_id") REFERENCES "medicamento" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE "prediccion" ADD FOREIGN KEY ("paciente_id") REFERENCES "paciente" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "paciente_alergia" ADD FOREIGN KEY ("paciente_id") REFERENCES "paciente" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "indicador" ADD FOREIGN KEY ("patologia_id") REFERENCES "patologia" ("id") DEFERRABLE INITIALLY IMMEDIATE;
