@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MedicionService {
     private final MedicionRepository repository;
+    private final MotorReglasService motorReglasService;
 
     public List<Medicion> findAll() {
         return repository.findAll();
@@ -22,7 +23,9 @@ public class MedicionService {
     }
 
     public Medicion save(Medicion entity) {
-        return repository.save(entity);
+        Medicion savedEntity = repository.save(entity);
+        motorReglasService.evaluarReglasPorMedicion(savedEntity);
+        return savedEntity;
     }
 
     public Medicion update(Long id, Medicion entity) {

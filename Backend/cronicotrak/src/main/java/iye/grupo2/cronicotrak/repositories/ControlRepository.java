@@ -26,6 +26,8 @@ public interface ControlRepository extends JpaRepository<Control, Long> {
     @Query("SELECT COUNT(c) FROM Control c WHERE c.asistio = true")
     long countByAsistioTrue();
 
+    boolean existsByPacienteIdAndAsistioFalse(Long pacienteId);
+
     @Query("SELECT c FROM Control c WHERE c.asistio = true")
     List<Control> findAllControlled();
 }
