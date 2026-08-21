@@ -44,11 +44,11 @@ public class RecentAlertService {
         
         return RecentAlertDto.builder()
                 .id(alerta.getId())
-                .patient(patientName)
-                .condition(condition)
-                .alert(alerta.getDescripcion())
-                .priority(priority)
+                .patientName(patientName)
+                .type(alerta.getTipo())
+                .description(alerta.getDescripcion())
                 .time(timeAgo)
+                .status(priority)
                 .build();
     }
 
@@ -63,6 +63,10 @@ public class RecentAlertService {
             case "emergencia":
             case "emergency":
                 return "high";
+            case "deterioro":
+            case "abandono":
+            case "farmacia":
+            case "estacional":
             case "advertencia":
             case "warning":
                 return "medium";

@@ -93,7 +93,7 @@ services:
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-admin}
       # ── Keycloak ─────────────────────────────────────────────
-      KC_ISSUER_URI: http://iye-keycloak:8080/realms/iye
+      KC_ISSUER_URI: ${KC_ISSUER_URI:-http://iye-keycloak:8080/realms/iye}
       # ── CORS ─────────────────────────────────────────────────
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       # ── Evolution API ────────────────────────────────────────

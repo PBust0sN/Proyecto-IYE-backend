@@ -39,6 +39,9 @@ public class Paciente {
     private String direccion;
     private String email;
 
+    @Column(name = "fecha_proximo_retiro")
+    private LocalDate fechaProximoRetiro;
+
     @Column(name = "tipo_sangre")
     private String tipoSangre;
 

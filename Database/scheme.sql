@@ -1,5 +1,5 @@
 CREATE TABLE "establecimiento" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "nombre" varchar,
   "tipo" varchar,
   "direccion" varchar,
@@ -8,7 +8,7 @@ CREATE TABLE "establecimiento" (
 );
 
 CREATE TABLE "usuario" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "nombre" varchar,
   "email" varchar,
   "password" varchar,
@@ -17,7 +17,7 @@ CREATE TABLE "usuario" (
 );
 
 CREATE TABLE "paciente" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "rut" varchar,
   "nombre" varchar,
   "age" int,
@@ -45,13 +45,13 @@ CREATE TABLE "paciente_alergia" (
 
 
 CREATE TABLE "patologia" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "nombre" varchar,
   "descripcion" text
 );
 
 CREATE TABLE "paciente_patologia" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "patologia_id" int,
   "fecha_diagnostico" date,
@@ -60,7 +60,7 @@ CREATE TABLE "paciente_patologia" (
 );
 
 CREATE TABLE "control" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "fecha_programada" date,
   "tipo" varchar,
@@ -72,7 +72,7 @@ CREATE TABLE "control" (
 );
 
 CREATE TABLE "indicador" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "nombre" varchar,
   "unidad" varchar,
   "lower" decimal,
@@ -82,7 +82,7 @@ CREATE TABLE "indicador" (
 
 
 CREATE TABLE "medicion" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "indicador_id" int,
   "valor" decimal,
@@ -90,7 +90,7 @@ CREATE TABLE "medicion" (
 );
 
 CREATE TABLE "alerta" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "tipo" varchar,
   "descripcion" text,
@@ -99,7 +99,7 @@ CREATE TABLE "alerta" (
 );
 
 CREATE TABLE "recordatorio" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "tipo" varchar,
   "canal" varchar,
@@ -108,12 +108,12 @@ CREATE TABLE "recordatorio" (
 );
 
 CREATE TABLE "medicamento" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "nombre" varchar
 );
 
 CREATE TABLE "paciente_medicamento" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "medicamento_id" int,
   "dosis" varchar,
@@ -121,7 +121,7 @@ CREATE TABLE "paciente_medicamento" (
 );
 
 CREATE TABLE "prediccion" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "paciente_id" int,
   "riesgo_descompensacion" decimal,
   "riesgo_inasistencia" decimal,
@@ -130,7 +130,7 @@ CREATE TABLE "prediccion" (
 );
 
 CREATE TABLE "sincronizacion_offline" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "entidad" varchar,
   "entidad_id" int,
   "operacion" varchar,
@@ -139,7 +139,7 @@ CREATE TABLE "sincronizacion_offline" (
 );
 
 CREATE TABLE "integracion_log" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "sistema" varchar,
   "tipo" varchar,
   "estado" varchar,

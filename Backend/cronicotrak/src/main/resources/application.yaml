@@ -25,9 +25,9 @@ spring:
       resourceserver:
         jwt:
           # Keycloak emite tokens con este issuer; Spring lo verifica en el claim "iss"
-          issuer-uri: ${KC_ISSUER_URI:http://localhost:8180/realms/iye}
+          issuer-uri: ${KC_ISSUER_URI:https://auth.sarabia-ti.cl/realms/iye}
           # JWKS explícito para no bloquear el startup si Keycloak tarda en arrancar
-          jwk-set-uri: ${KC_ISSUER_URI:http://localhost:8180/realms/iye}/protocol/openid-connect/certs
+          jwk-set-uri: ${KC_ISSUER_URI:https://auth.sarabia-ti.cl/realms/iye}/protocol/openid-connect/certs
 
 # ── CORS ──────────────────────────────────────────────────────────
 app:

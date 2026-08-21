@@ -42,6 +42,7 @@ help:
 	@printf "$(CYAN)╚══════════════════════════════════════╝\n$(RESET)"
 	@printf "\n"
 	@printf "  $(GREEN)make start$(RESET)         → Levanta TODO en Docker (DB + Keycloak + Backend)\n"
+	@printf "  $(GREEN)make start-no-kc$(RESET)   → Levanta DB y Backend en Docker (sin Keycloak)\n"
 	@printf "  $(GREEN)make dev$(RESET)           → Levanta DB + Keycloak en Docker y Backend localmente\n"
 	@printf "  $(GREEN)make stop$(RESET)          → Detiene todo\n"
 	@printf "  $(GREEN)make db$(RESET)            → Solo levanta PostgreSQL\n"
@@ -98,6 +99,16 @@ start: _check-env
 	@printf "$(GREEN)✔ Infraestructura completa levantada en segundo plano$(RESET)\n"
 	@printf "  - $(CYAN)Backend$(RESET) en: http://localhost:8080\n"
 	@printf "  - $(CYAN)Keycloak$(RESET) en: http://localhost:8180\n"
+	@printf "  - $(CYAN)PostgreSQL$(RESET) en: localhost:5432\n"
+
+# ──────────────────────────────────────────────────────────────
+## Levanta DB y Backend en Docker (sin Keycloak)
+# ──────────────────────────────────────────────────────────────
+start-no-kc: _check-env db _wait-db
+	@printf "$(YELLOW)▶ Levantando Backend y Evolution API en Docker (sin Keycloak)...$(RESET)\n"
+	docker compose -f $(COMPOSE_DIR)/compose.yml up -d --no-deps iye-backend evolution-api
+	@printf "$(GREEN)✔ DB, Backend y Evolution API levantados en segundo plano$(RESET)\n"
+	@printf "  - $(CYAN)Backend$(RESET) en: http://localhost:8080\n"
 	@printf "  - $(CYAN)PostgreSQL$(RESET) en: localhost:5432\n"
 
 # ──────────────────────────────────────────────────────────────

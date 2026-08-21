@@ -21,6 +21,7 @@ import java.util.Map;
 public class AlertaController {
     private final AlertaService service;
     private final RecentAlertService recentAlertService;
+    private final iye.grupo2.cronicotrak.services.MotorReglasService motorReglasService;
 
     /**
      * Retrieves all alerts.
@@ -103,5 +104,19 @@ public class AlertaController {
     public ResponseEntity<List<RecentAlertDto>> getRecentAlerts() {
         List<RecentAlertDto> alerts = recentAlertService.getTodayAlerts();
         return ResponseEntity.ok(alerts);
+    }
+
+    /**
+     * Gatilla la demostración de alertas preventivas.
+     *
+     * @param phone the phone number to send alerts to
+     * @return summary of executed alerts
+     */
+    @PostMapping("/trigger-demo")
+    public ResponseEntity<Map<String, String>> triggerDemo(@RequestParam String phone) {
+        String reporte = motorReglasService.ejecutarDemo(phone);
+        Map<String, String> response = new HashMap<>();
+        response.put("reporte", reporte);
+        return ResponseEntity.ok(response);
     }
 }

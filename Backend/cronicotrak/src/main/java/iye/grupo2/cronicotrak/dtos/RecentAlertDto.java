@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RecentAlertDto {
     private Long id;
-    private String patient;
-    private String condition;
-    private String alert;
-    private String priority;
+    private String patientName;
+    private String type;
+    private String description;
     private String time;
+    private String status;
 }

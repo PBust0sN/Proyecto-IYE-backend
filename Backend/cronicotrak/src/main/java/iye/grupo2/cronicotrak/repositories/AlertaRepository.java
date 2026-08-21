@@ -12,6 +12,7 @@ import java.util.List;
 public interface AlertaRepository extends JpaRepository<Alerta, Long> {
     java.util.List<Alerta> findByPacienteId(Long pacienteId);
     long countByResueltaFalse();
+    boolean existsByPacienteIdAndTipoAndResueltaFalse(Long pacienteId, String tipo);
     
     @Query("SELECT a FROM Alerta a")
     List<Alerta> findAllAlertas();

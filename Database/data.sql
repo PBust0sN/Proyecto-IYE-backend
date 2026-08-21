@@ -434,3 +434,21 @@ INSERT INTO "usuario" ("id", "nombre", "email", "password", "rol", "establecimie
 
 
 SET session_replication_role = 'origin';
+ 
+ - -   A j u s t e   d e   s e c u e n c i a s   p a r a   S E R I A L  
+ S E L E C T   s e t v a l ( ' e s t a b l e c i m i e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   e s t a b l e c i m i e n t o ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' u s u a r i o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   u s u a r i o ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' p a c i e n t e _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' p a t o l o g i a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a t o l o g i a ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' p a c i e n t e _ p a t o l o g i a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e _ p a t o l o g i a ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' c o n t r o l _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   c o n t r o l ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' i n d i c a d o r _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   i n d i c a d o r ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' m e d i c i o n _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   m e d i c i o n ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' a l e r t a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   a l e r t a ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' r e c o r d a t o r i o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   r e c o r d a t o r i o ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' m e d i c a m e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   m e d i c a m e n t o ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' p a c i e n t e _ m e d i c a m e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e _ m e d i c a m e n t o ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' p r e d i c c i o n _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p r e d i c c i o n ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' s i n c r o n i z a c i o n _ o f f l i n e _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   s i n c r o n i z a c i o n _ o f f l i n e ) ,   1 ) ) ;  
+ S E L E C T   s e t v a l ( ' i n t e g r a c i o n _ l o g _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   i n t e g r a c i o n _ l o g ) ,   1 ) ) ;  
+ 
