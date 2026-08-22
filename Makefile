@@ -29,7 +29,7 @@ CYAN   := \033[0;36m
 RED    := \033[0;31m
 RESET  := \033[0m
 
-.PHONY: help db db-stop backend start dev stop clean logs ps env-check kc kc-stop kc-logs docker-build _check-env _wait-db _gradlew-perms
+.PHONY: help db db-stop backend start dev stop clean logs ps env-check kc kc-stop kc-logs docker-build backup _check-env _wait-db _gradlew-perms
 
 # ──────────────────────────────────────────────────────────────
 ## Muestra esta ayuda
@@ -55,6 +55,7 @@ help:
 	@printf "  $(GREEN)make ps$(RESET)            → Estado de todos los contenedores\n"
 	@printf "  $(GREEN)make env-check$(RESET)    → Muestra las variables de entorno cargadas\n"
 	@printf "  $(GREEN)make docker-build$(RESET) → Construye la imagen de Docker del backend\n"
+	@printf "  $(GREEN)make backup$(RESET)      → Ejecuta un backup manual de la BD ahora\n"
 	@printf "  $(GREEN)make clean$(RESET)         → Limpia build del backend\n"
 	@printf "\n"
 
@@ -132,6 +133,14 @@ stop:
 # ──────────────────────────────────────────────────────────────
 logs:
 	docker compose -f $(COMPOSE_DIR)/compose.yml logs -f iye-db
+
+# ──────────────────────────────────────────────────────────────
+## Ejecuta un backup manual ahora (sin esperar al cron)
+# ──────────────────────────────────────────────────────────────
+backup:
+	@printf "$(YELLOW)▶ Ejecutando backup manual...$(RESET)\n"
+	docker compose -f $(COMPOSE_DIR)/compose.yml run --rm --no-deps --entrypoint /bin/sh iye-backup /backup.sh
+	@printf "$(GREEN)✔ Backup completado (ver volumen iye-backups)$(RESET)\n"
 
 # ──────────────────────────────────────────────────────────────
 ## Estado de todos los contenedores (DB + Keycloak)

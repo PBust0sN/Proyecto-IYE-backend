@@ -9,3 +9,9 @@
 > Repositorio de frontend
 > 
 > https://github.com/MateoVL/Proyecto-IyE-Front
+
+## Backup de la base de datos
+
+El respaldo automático de PostgreSQL (dumps diarios programados, rotación y guía de
+restauración) está documentado en
+[`Development/BACKUP_README.md`](Development/BACKUP_README.md).
