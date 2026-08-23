@@ -1,6 +1,6 @@
 package iye.grupo2.cronicotrak.controllers;
 
-import iye.grupo2.cronicotrak.dto.WhatsAppMessageRequest;
+import iye.grupo2.cronicotrak.DTO.WhatsAppMessageRequest;
 import iye.grupo2.cronicotrak.services.WhatsAppService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

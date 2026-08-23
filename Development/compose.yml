@@ -96,6 +96,9 @@ services:
       KC_ISSUER_URI: ${KC_ISSUER_URI:-http://iye-keycloak:8080/realms/iye}
       # ── CORS ─────────────────────────────────────────────────
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      # ── Cifrado de datos sensibles ───────────────────────────
+      ENC_KEY: ${ENC_KEY:-n+WPGF8DECxYtC80EBZur9WDZIZS3reCBLNB9zJ3ZVU=}
+      ENC_MIGRATE: ${ENC_MIGRATE:-false}
       # ── Evolution API ────────────────────────────────────────
       EVOLUTION_API_URL: http://iye-evolution-api:8080
       EVOLUTION_API_KEY: clave_secreta_123
@@ -131,8 +134,48 @@ services:
     volumes:
       - iye-evolution-instances:/evolution/instances
 
+  # ── Backup automático de PostgreSQL ─────────────────────────────
+  # Ejecuta pg_dump de las bases iye y keycloak según BACKUP_CRON,
+  # comprime y rota conservando solo las últimas BACKUP_RETENTION
+  # copias por base en el volumen iye-backups.
+  # Ver Development/BACKUP_README.md
+  iye-backup:
+    image: postgres:17-alpine
+    container_name: iye-backup
+    restart: unless-stopped
+    depends_on:
+      iye-db:
+        condition: service_healthy
+    environment:
+      BACKUP_CRON: ${BACKUP_CRON:-0 3 * * *}
+      BACKUP_RETENTION: ${BACKUP_RETENTION:-30}
+      BACKUP_CRYPT: ${BACKUP_CRYPT:-false}
+      BACKUP_PASSWORD: ${BACKUP_PASSWORD:-}
+      BACKUP_LOG: /backups/backup.log
+      BACKUP_DATABASES: ${DB_NAME:-iye} keycloak
+      DB_HOST: iye-db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-admin}
+    volumes:
+      - ./backup.sh:/backup.sh:ro
+      - ./backup-entrypoint.sh:/usr/local/bin/backup-entrypoint.sh:ro
+      - iye-backups:/backups
+    entrypoint: ["/bin/sh", "/usr/local/bin/backup-entrypoint.sh"]
+    networks:
+      - iye-net
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
+        reservations:
+          memory: 64M
+          cpus: "0.05"
+
 volumes:
   iye-db:
+  iye-backups:
   iye-evolution-instances:
 
 networks:

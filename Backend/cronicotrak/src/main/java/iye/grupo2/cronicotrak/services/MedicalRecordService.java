@@ -1,8 +1,8 @@
 package iye.grupo2.cronicotrak.services;
 
-import iye.grupo2.cronicotrak.dto.IndicatorDTO;
-import iye.grupo2.cronicotrak.dto.MedicalRecordDTO;
-import iye.grupo2.cronicotrak.dto.PathologyRecordDTO;
+import iye.grupo2.cronicotrak.DTO.IndicatorDTO;
+import iye.grupo2.cronicotrak.DTO.MedicalRecordDTO;
+import iye.grupo2.cronicotrak.DTO.PathologyRecordDTO;
 import iye.grupo2.cronicotrak.entities.*;
 import iye.grupo2.cronicotrak.repositories.*;
 import lombok.RequiredArgsConstructor;
