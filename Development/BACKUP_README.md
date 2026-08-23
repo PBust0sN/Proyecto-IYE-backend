@@ -49,6 +49,8 @@ Variables disponibles (todas con valor por defecto, puedes sobrescribirlas en
 | `BACKUP_RETENTION`   | `30`           | Nº de copias por base que se conservan antes de rotar.         |
 | `BACKUP_CRYPT`       | `false`        | Activa cifrado AES-256 de los dumps (ver sección Cifrado).     |
 | `BACKUP_PASSWORD`    | *(vacío)*      | Frase usada para cifrar/descifrar los dumps.                   |
+| `ENC_KEY`            | *(default dev)*| Clave AES-256 (base64) usada para cifrar datos en BD. Requisito para leer los dumps. |
+| `ENC_MIGRATE`        | `false`        | Re-cifra datos en claro al arrancar (una sola vez).            |
 
 ## Uso
 
@@ -99,6 +101,34 @@ docker run --rm -v iye-backups:/backups --network iye-net postgres:17-alpine \
 > **Regla de oro**: un backup que no se prueba no es un backup. Programa una
 > restauración de prueba mensual en un contenedor descartable para verificar que
 > las copias sirven.
+
+## Cifrado de datos sensibles en la BD vs. cifrado del dump
+
+La aplicación cifra los datos sensibles de pacientes (**AES-256-GCM**, campos como
+`rut`, `nombre`, `telefono`, `direccion`, `email`, etc.) **en la propia base de datos**
+antes de persistirlos. Ver [`ENCRYPTION_README.md`](ENCRYPTION_README.md).
+
+Esto tiene implicaciones directas sobre los backups:
+
+- **El `pg_dump` NO se rompe con el cifrado**: `pg_dump -Fc` copia la base a nivel de
+  PostgreSQL y las columnas cifradas son solo strings base64, por lo que se vuelcan
+  sin problema. El cifrado es transparente para el backup.
+- **Los dumps contienen datos ya cifrados**: una restauración devuelve la base con el
+  ciphertext almacenado; la aplicación lo descifra al leerlo.
+- **La restauración depende de la clave `ENC_KEY`**: si restauras un dump en un entorno
+  con una `ENC_KEY` distinta (o sin ella), la aplicación no podrá descifrar los datos
+  y fallará al leerlos. La `ENC_KEY` es tan importante como el propio dump: respáldala
+  de forma segura junto con los backups.
+- **Dumps generados ANTES de activar el cifrado** contienen los datos **en claro**.
+  Si restauras uno de estos en la aplicación actual, los converters intentarán
+  descifrar texto plano y fallarán. Para esos dumps hay que re-migrar tras restaurar
+  (arrancar una vez con `ENC_MIGRATE=true`) o descartarlos.
+- **Recuperación de la clave**: si rotas o pierdes la `ENC_KEY`, todos los backups
+  posteriores al cifrado quedan **inutilizables**. No la cambies sin planificar una
+  re-migración completa.
+
+> En resumen: el cifrado no interfiere con el `pg_dump`, pero hace que la `ENC_KEY`
+> sea un requisito para poder leer cualquier dump generado después de la migración.
 
 ## Cifrado (opcional)
 

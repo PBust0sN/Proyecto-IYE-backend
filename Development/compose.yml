@@ -96,6 +96,9 @@ services:
       KC_ISSUER_URI: ${KC_ISSUER_URI:-http://iye-keycloak:8080/realms/iye}
       # ── CORS ─────────────────────────────────────────────────
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      # ── Cifrado de datos sensibles ───────────────────────────
+      ENC_KEY: ${ENC_KEY:-n+WPGF8DECxYtC80EBZur9WDZIZS3reCBLNB9zJ3ZVU=}
+      ENC_MIGRATE: ${ENC_MIGRATE:-false}
       # ── Evolution API ────────────────────────────────────────
       EVOLUTION_API_URL: http://iye-evolution-api:8080
       EVOLUTION_API_KEY: clave_secreta_123
