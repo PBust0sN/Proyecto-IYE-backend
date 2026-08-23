@@ -1,6 +1,6 @@
 package iye.grupo2.cronicotrak.controllers;
 
-import iye.grupo2.cronicotrak.dto.MedicalRecordDTO;
+import iye.grupo2.cronicotrak.DTO.MedicalRecordDTO;
 import iye.grupo2.cronicotrak.services.MedicalRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

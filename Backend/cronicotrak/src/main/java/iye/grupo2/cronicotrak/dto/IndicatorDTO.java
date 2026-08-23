@@ -1,4 +1,4 @@
-package iye.grupo2.cronicotrak.dto;
+package iye.grupo2.cronicotrak.DTO;
 
 import lombok.*;
 import java.math.BigDecimal;

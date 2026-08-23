@@ -34,6 +34,15 @@ app:
   cors:
     allowed-origins: ${FRONTEND_URL:http://localhost:5173}
 
+# ── Cifrado de datos sensibles ─────────────────────────────────────
+# Clave maestra AES (base64, 32 bytes) para cifrar datos de pacientes.
+# En producción DEBE venir de la variable de entorno ENC_KEY (secret manager).
+# El default solo sirve para desarrollo local / tests.
+  encryption:
+    key: ${ENC_KEY:n+WPGF8DECxYtC80EBZur9WDZIZS3reCBLNB9zJ3ZVU=}
+    # true → re-cifra datos existentes que aún están en claro (una sola vez).
+    migrate: ${ENC_MIGRATE:false}
+
 # ── Actuator ───────────────────────────────────────────────────────
 management:
   endpoints:

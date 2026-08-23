@@ -1,6 +1,7 @@
 package iye.grupo2.cronicotrak.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import iye.grupo2.cronicotrak.crypto.StringCryptoConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -18,12 +19,17 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Convert(converter = StringCryptoConverter.class)
     private String rut;
+
+    @Convert(converter = StringCryptoConverter.class)
     private String nombre;
+
     private Integer age;
     private String status;
     private String room;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Column(name = "telefono")
     private String phone;
 
@@ -36,21 +42,28 @@ public class Paciente {
     @Column(name = "next_visit")
     private LocalDateTime nextVisit;
 
+    @Convert(converter = StringCryptoConverter.class)
     private String direccion;
+
+    @Convert(converter = StringCryptoConverter.class)
     private String email;
 
     @Column(name = "fecha_proximo_retiro")
     private LocalDate fechaProximoRetiro;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Column(name = "tipo_sangre")
     private String tipoSangre;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Column(name = "nombre_emergencia")
     private String nombreEmergencia;
 
+    @Convert(converter = StringCryptoConverter.class)
     @Column(name = "telefono_emergencia")
     private String telefonoEmergencia;
 
+    @Convert(converter = StringCryptoConverter.class)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "paciente_alergia", joinColumns = @JoinColumn(name = "paciente_id"))
     @Column(name = "alergia")
