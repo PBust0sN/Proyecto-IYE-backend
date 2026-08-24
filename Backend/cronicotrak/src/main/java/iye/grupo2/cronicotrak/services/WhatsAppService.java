@@ -5,7 +5,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -26,7 +25,6 @@ public class WhatsAppService {
         this.restTemplate = new RestTemplate();
     }
 
-    @Async
     public boolean enviarMensaje(String numero, String texto) {
         String url = String.format("%s/message/sendText/%s", evolutionApiUrl, evolutionApiInstance);
 
