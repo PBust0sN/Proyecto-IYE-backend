@@ -51,14 +51,16 @@ public class MotorReglasService {
         }
 
         if (isCritica) {
-            generarAlerta(paciente, "Critica", String.format("Lectura crítica de %s: %.2f %s", medicion.getIndicador().getNombre(), valor, medicion.getIndicador().getUnidad()));
+            generarAlerta(paciente, "Critica", String.format("Lectura crítica de %s: %.2f %s",
+                    medicion.getIndicador().getNombre(), valor, medicion.getIndicador().getUnidad()));
         } else {
             evaluarDeterioroProgresivo(paciente, medicion);
         }
     }
 
     private void evaluarDeterioroProgresivo(Paciente paciente, Medicion medicionActual) {
-        List<Medicion> mediciones = medicionRepository.findByPacienteIdAndIndicadorId(paciente.getId(), medicionActual.getIndicador().getId());
+        List<Medicion> mediciones = medicionRepository.findByPacienteIdAndIndicadorId(paciente.getId(),
+                medicionActual.getIndicador().getId());
         mediciones.sort((m1, m2) -> m2.getFecha().compareTo(m1.getFecha())); // Descendente por fecha
 
         if (mediciones.size() >= 3) {
@@ -71,7 +73,9 @@ public class MotorReglasService {
 
             if (tendenciaAlza || tendenciaBaja) {
                 if (!alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(paciente.getId(), "Deterioro")) {
-                    generarAlerta(paciente, "Deterioro", String.format("Tendencia preocupante en %s detectada en las últimas 3 mediciones.", medicionActual.getIndicador().getNombre()));
+                    generarAlerta(paciente, "Deterioro",
+                            String.format("Tendencia preocupante en %s detectada en las últimas 3 mediciones.",
+                                    medicionActual.getIndicador().getNombre()));
                 }
             }
         }
@@ -88,7 +92,8 @@ public class MotorReglasService {
                 if (p.getNextVisit() == null || p.getNextVisit().isBefore(LocalDateTime.now())) {
                     if (!alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(p.getId(), "Abandono")) {
                         generarAlerta(p, "Abandono", "Paciente sin controles recientes ni agendados (>30 días).");
-                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre() + ", notamos que hace más de 30 días no registras controles. Por favor, acércate a tu CESFAM para agendar una cita.");
+                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre()
+                                + ", notamos que hace más de 30 días no registras controles y tampoco tienes una cita agendada. Por favor, acércate a tu CESFAM para agendar una cita de control para seguir con tus cuidados.");
                     }
                 }
             }
@@ -107,7 +112,8 @@ public class MotorReglasService {
                 if (diasRetraso > 5) {
                     if (!alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(p.getId(), "Farmacia")) {
                         generarAlerta(p, "Farmacia", "Retraso de más de 5 días en el retiro de medicamentos.");
-                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre() + ", tienes un retraso en el retiro de tus medicamentos mensuales. Por favor, acércate a la farmacia del CESFAM lo antes posible.");
+                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre()
+                                + ", notamos que tienes un retraso en el retiro de tus medicamentos mensuales. Por favor, acércate a la farmacia del CESFAM lo antes posible para seguir con tu tratamiento.");
                     }
                 }
             }
@@ -118,9 +124,11 @@ public class MotorReglasService {
     @Transactional
     public void verificarAlertaEstacional() {
         Month mesActual = LocalDate.now().getMonth();
-        boolean esEpocaFria = mesActual == Month.MAY || mesActual == Month.JUNE || mesActual == Month.JULY || mesActual == Month.AUGUST;
+        boolean esEpocaFria = mesActual == Month.MAY || mesActual == Month.JUNE || mesActual == Month.JULY
+                || mesActual == Month.AUGUST;
 
-        if (!esEpocaFria) return;
+        if (!esEpocaFria)
+            return;
 
         List<Paciente> pacientes = pacienteRepository.findAll();
         LocalDate threshold = LocalDate.now().minusDays(15);
@@ -133,11 +141,14 @@ public class MotorReglasService {
             });
 
             if (tieneRespiratoria) {
-                boolean sinControlReciente = p.getLastVisit() == null || p.getLastVisit().toLocalDate().isBefore(threshold);
+                boolean sinControlReciente = p.getLastVisit() == null
+                        || p.getLastVisit().toLocalDate().isBefore(threshold);
                 if (sinControlReciente) {
                     if (!alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(p.getId(), "Estacional")) {
-                        generarAlerta(p, "Estacional", "Paciente con riesgo respiratorio sin controles preventivos en los últimos 15 días (Campaña de Invierno).");
-                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre() + ", estamos en campaña de invierno. Dado tu diagnóstico respiratorio, te invitamos a registrar tus niveles o visitar tu CESFAM preventivamente.");
+                        generarAlerta(p, "Estacional",
+                                "Paciente con riesgo respiratorio sin controles preventivos en los últimos 15 días (Campaña de Invierno).");
+                        whatsAppService.enviarMensaje(p.getPhone(), "Hola " + p.getNombre()
+                                + ", estamos en campaña de invierno. Dado tu diagnóstico respiratorio, te invitamos a registrar tus niveles o visitar tu CESFAM preventivamente para un chequeo de invierno.");
                     }
                 }
             }
@@ -155,7 +166,8 @@ public class MotorReglasService {
             demoX.setNextVisit(null);
             pacienteRepository.save(demoX);
             generarAlerta(demoX, "Abandono", "Paciente sin controles recientes ni agendados (>30 días).");
-            whatsAppService.enviarMensaje(phone, "Hola Demo X, notamos que hace más de 30 días no registras controles. Por favor, acércate a tu CESFAM.");
+            whatsAppService.enviarMensaje(phone,
+                    "Hola Demo X, notamos que hace más de 30 días no registras controles y tampoco tienes una cita agendada. Por favor, acércate a tu CESFAM para agendar una cita de control para seguir con tus cuidados.");
             reporte.append("Simulada alerta de Abandono (Demo X).\n");
             Thread.sleep(1000);
 
@@ -164,7 +176,8 @@ public class MotorReglasService {
             demoY.setFechaProximoRetiro(LocalDate.now().minusDays(6));
             pacienteRepository.save(demoY);
             generarAlerta(demoY, "Farmacia", "Retraso de más de 5 días en el retiro de medicamentos.");
-            whatsAppService.enviarMensaje(phone, "Hola Demo Y, tienes un retraso en el retiro de tus medicamentos mensuales.");
+            whatsAppService.enviarMensaje(phone,
+                    "Hola Demo Y, notamos que tienes un retraso en el retiro de tus medicamentos mensuales. Por favor, acércate a la farmacia del CESFAM lo antes posible para seguir con tu tratamiento.");
             reporte.append("Simulada alerta de Farmacia (Demo Y).\n");
             Thread.sleep(1000);
 
@@ -172,8 +185,10 @@ public class MotorReglasService {
             Paciente demoW = crearDemoPaciente("Demo W", phone);
             demoW.setLastVisit(LocalDateTime.now().minusDays(20));
             pacienteRepository.save(demoW);
-            generarAlerta(demoW, "Estacional", "Paciente con riesgo respiratorio sin controles preventivos (Campaña Invierno).");
-            whatsAppService.enviarMensaje(phone, "Hola Demo W, estamos en campaña de invierno. Dado tu diagnóstico (EPOC/Asma), te invitamos a registrar tus niveles.");
+            generarAlerta(demoW, "Estacional",
+                    "Paciente con riesgo respiratorio sin controles preventivos (Campaña Invierno).");
+            whatsAppService.enviarMensaje(phone,
+                    "Hola Demo W, estamos en campaña de invierno. Dado tu diagnóstico respiratorio, te invitamos a registrar tus niveles o visitar tu CESFAM preventivamente para un chequeo de invierno.");
             reporte.append("Simulada alerta Estacional (Demo W).\n");
             Thread.sleep(1000);
 
@@ -181,7 +196,8 @@ public class MotorReglasService {
             Paciente demoV = crearDemoPaciente("Demo V", phone);
             pacienteRepository.save(demoV);
             generarAlerta(demoV, "Deterioro", "Tendencia preocupante detectada en las últimas 3 mediciones.");
-            whatsAppService.enviarMensaje(phone, "Hola Demo V, hemos detectado una tendencia preocupante en tus últimos controles. Te sugerimos agendar una evaluación.");
+            whatsAppService.enviarMensaje(phone,
+                    "Hola Demo V, hemos detectado una tendencia preocupante en las mediciones de tus últimos controles. Te sugerimos agendar una evaluación con tu médico tratante para prevenir complicaciones.");
             reporte.append("Simulada alerta de Deterioro (Demo V).\n");
             Thread.sleep(1000);
 
@@ -189,7 +205,8 @@ public class MotorReglasService {
             Paciente demoU = crearDemoPaciente("Demo U", phone);
             pacienteRepository.save(demoU);
             generarAlerta(demoU, "Critica", "Lectura crítica de medición registrada.");
-            whatsAppService.enviarMensaje(phone, "Hola Demo U, hemos recibido una medición con valor crítico. Un profesional de salud te contactará a la brevedad.");
+            whatsAppService.enviarMensaje(phone,
+                    "Hola Demo U, hemos recibido una medición con valor crítico. Un profesional de salud te contactará a la brevedad o dirígete a urgencias si te encuentras mal.");
             reporte.append("Simulada alerta Crítica (Demo U).\n");
 
         } catch (InterruptedException e) {
@@ -204,7 +221,7 @@ public class MotorReglasService {
         p.setNombre(nombre);
         p.setPhone(phone);
         p.setActivo(true);
-        p.setRut(nombre.replace(" ", "") + "-" + (int)(Math.random()*9));
+        p.setRut(nombre.replace(" ", "") + "-" + (int) (Math.random() * 9));
         p.setAge(50);
         return p;
     }
