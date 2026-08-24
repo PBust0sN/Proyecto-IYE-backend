@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 public class WhatsAppService {
@@ -23,6 +24,11 @@ public class WhatsAppService {
 
     public WhatsAppService() {
         this.restTemplate = new RestTemplate();
+    }
+
+    @Async
+    public void enviarMensajeAsync(String numero, String texto) {
+        enviarMensaje(numero, texto);
     }
 
     public boolean enviarMensaje(String numero, String texto) {

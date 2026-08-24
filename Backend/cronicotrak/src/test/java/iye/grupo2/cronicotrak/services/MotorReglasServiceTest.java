@@ -72,6 +72,8 @@ class MotorReglasServiceTest {
         medicion.setIndicador(indicador);
         medicion.setValor(new BigDecimal("140")); // Critica, > 120
 
+        when(alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(1L, "Critica")).thenReturn(false);
+
         // Act
         motorReglasService.evaluarReglasPorMedicion(medicion);
 
@@ -84,8 +86,34 @@ class MotorReglasServiceTest {
         assertTrue(savedAlerta.getDescripcion().contains("Lectura crítica"));
 
         ArgumentCaptor<String> mensajeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(whatsAppService, times(1)).enviarMensaje(eq("56912345678"), mensajeCaptor.capture());
+        verify(whatsAppService, times(1)).enviarMensajeAsync(eq("56912345678"), mensajeCaptor.capture());
         assertTrue(mensajeCaptor.getValue().contains("valor crítico"));
+    }
+
+    @Test
+    void evaluarReglasPorMedicion_WhenCriticaAndAlertExists_DoesNotGenerateAlert() {
+        // Arrange
+        Paciente paciente = new Paciente();
+        paciente.setId(1L);
+
+        Indicador indicador = new Indicador();
+        indicador.setNombre("Presion Arterial Sistolica");
+        indicador.setLower(new BigDecimal("90"));
+        indicador.setUpper(new BigDecimal("120"));
+
+        Medicion medicion = new Medicion();
+        medicion.setPaciente(paciente);
+        medicion.setIndicador(indicador);
+        medicion.setValor(new BigDecimal("140")); // Critica, > 120
+
+        when(alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(1L, "Critica")).thenReturn(true);
+
+        // Act
+        motorReglasService.evaluarReglasPorMedicion(medicion);
+
+        // Assert
+        verify(alertaRepository, never()).save(any(Alerta.class));
+        verify(whatsAppService, never()).enviarMensajeAsync(anyString(), anyString());
     }
 
     @Test
@@ -131,7 +159,7 @@ class MotorReglasServiceTest {
         assertTrue(savedAlerta.getDescripcion().contains("Tendencia preocupante"));
 
         ArgumentCaptor<String> mensajeCaptor = ArgumentCaptor.forClass(String.class);
-        verify(whatsAppService, times(1)).enviarMensaje(eq("56987654321"), mensajeCaptor.capture());
+        verify(whatsAppService, times(1)).enviarMensajeAsync(eq("56987654321"), mensajeCaptor.capture());
         assertTrue(mensajeCaptor.getValue().contains("tendencia preocupante"));
     }
 
@@ -159,6 +187,6 @@ class MotorReglasServiceTest {
 
         // Assert
         verify(alertaRepository, never()).save(any(Alerta.class));
-        verify(whatsAppService, never()).enviarMensaje(anyString(), anyString());
+        verify(whatsAppService, never()).enviarMensajeAsync(anyString(), anyString());
     }
 }
