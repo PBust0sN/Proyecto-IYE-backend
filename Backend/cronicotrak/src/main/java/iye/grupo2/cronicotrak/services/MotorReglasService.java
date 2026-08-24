@@ -51,10 +51,12 @@ public class MotorReglasService {
         }
 
         if (isCritica) {
-            generarAlerta(paciente, "Critica", String.format("Lectura crítica de %s: %.2f %s",
-                    medicion.getIndicador().getNombre(), valor, medicion.getIndicador().getUnidad()));
-            whatsAppService.enviarMensaje(paciente.getPhone(), "Hola " + paciente.getNombre()
-                    + ", hemos recibido una medición con valor crítico. Un profesional de salud te contactará a la brevedad o dirígete a urgencias si te encuentras mal.");
+            if (!alertaRepository.existsByPacienteIdAndTipoAndResueltaFalse(paciente.getId(), "Critica")) {
+                generarAlerta(paciente, "Critica", String.format("Lectura crítica de %s: %.2f %s",
+                        medicion.getIndicador().getNombre(), valor, medicion.getIndicador().getUnidad()));
+                whatsAppService.enviarMensaje(paciente.getPhone(), "Hola " + paciente.getNombre()
+                        + ", hemos recibido una medición con valor crítico. Un profesional de salud te contactará a la brevedad o dirígete a urgencias si te encuentras mal.");
+            }
         } else {
             evaluarDeterioroProgresivo(paciente, medicion);
         }
