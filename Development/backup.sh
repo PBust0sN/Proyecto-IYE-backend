@@ -63,6 +63,42 @@ for db in ${BACKUP_DATABASES}; do
   echo "[backup] ✓ '${db}' respaldado (${FILE})"
 done
 
+# ── Backup y rotación de logs de seguridad ──
+echo "[backup] procesando logs de seguridad"
+LOGS="security.log keycloak-security.log"
+for logfile in $LOGS; do
+  if [ -f "${BACKUP_DIR}/${logfile}" ]; then
+    LOG_BACKUP="${BACKUP_DIR}/${logfile}_${STAMP}.tar.gz"
+    tar -czf "${LOG_BACKUP}" -C "${BACKUP_DIR}" "${logfile}"
+    
+    if [ "${BACKUP_CRYPT}" = "true" ]; then
+      if command -v openssl >/dev/null 2>&1 && [ -n "${BACKUP_PASSWORD}" ]; then
+        ENC_FILE="${LOG_BACKUP}.enc"
+        openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:"${BACKUP_PASSWORD}" \
+          -in "${LOG_BACKUP}" -out "${ENC_FILE}"
+        rm -f -- "${LOG_BACKUP}"
+        LOG_BACKUP="${ENC_FILE}"
+        echo "[backup] ✓ cifrado AES-256 aplicado a log (${LOG_BACKUP})"
+      fi
+    fi
+    
+    # Vaciar (truncate) el archivo log actual para evitar que crezca indefinidamente
+    > "${BACKUP_DIR}/${logfile}"
+    echo "[backup] ✓ '${logfile}' respaldado y truncado (${LOG_BACKUP})"
+    
+    # Rotación del log
+    n=0
+    for f in $(ls -1t "${BACKUP_DIR}/${logfile}_"* 2>/dev/null || true); do
+      n=$((n + 1))
+      if [ "${n}" -gt "${BACKUP_RETENTION}" ]; then
+        echo "[backup]   eliminando log antiguo ${f}"
+        rm -f -- "${f}"
+      fi
+    done
+  fi
+done
+
+
 # ── Rotación: conserva solo las últimas BACKUP_RETENTION por base ──
 echo "[backup] rotación: conservando las últimas ${BACKUP_RETENTION} copias por base"
 for db in ${BACKUP_DATABASES}; do

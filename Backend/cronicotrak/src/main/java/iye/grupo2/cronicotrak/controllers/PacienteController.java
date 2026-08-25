@@ -8,6 +8,7 @@ import iye.grupo2.cronicotrak.services.PacienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import iye.grupo2.cronicotrak.security.LogSecurity;
 
 import java.util.List;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class PacienteController {
      * @return detailed information of the patient, or 404 if not found
      */
     @GetMapping("/detail/{id}")
+    @LogSecurity(action = "READ_PATIENT_DETAIL", severity = "INFO")
     public ResponseEntity<PatientDetailDTO> findPatientDetailById(@PathVariable Long id) {
         PatientDetailDTO detail = service.findPatientDetailById(id);
         return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
@@ -84,6 +86,7 @@ public class PacienteController {
      * @return the saved patient
      */
     @PostMapping
+    @LogSecurity(action = "CREATE_PATIENT", severity = "WARN")
     public Paciente save(@RequestBody Paciente entity) {
         return service.save(entity);
     }
@@ -96,6 +99,7 @@ public class PacienteController {
      * @return the updated patient, or 404 if not found
      */
     @PutMapping("/{id}")
+    @LogSecurity(action = "UPDATE_PATIENT", severity = "WARN")
     public ResponseEntity<Paciente> update(@PathVariable Long id, @RequestBody Paciente entity) {
         Paciente updated = service.update(id, entity);
         return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
@@ -108,6 +112,7 @@ public class PacienteController {
      * @return a response indicating the result of the operation
      */
     @DeleteMapping("/{id}")
+    @LogSecurity(action = "DELETE_PATIENT", severity = "CRITICAL")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
