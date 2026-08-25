@@ -5,6 +5,7 @@ import iye.grupo2.cronicotrak.services.MedicalRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import iye.grupo2.cronicotrak.security.LogSecurity;
 
 @RestController
 @RequestMapping("/api/v1/medical/record")
@@ -29,6 +30,7 @@ public class MedicalRecordController {
      * Actualiza la ficha médica del paciente.
      */
     @PutMapping("/{idPatient}")
+    @LogSecurity(action = "UPDATE_MEDICAL_RECORD", severity = "WARN")
     public ResponseEntity<MedicalRecordDTO> updateMedicalRecord(
             @PathVariable Long idPatient,
             @RequestBody MedicalRecordDTO dto) {
