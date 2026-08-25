@@ -224,13 +224,21 @@ public class MotorReglasService {
     }
 
     private Paciente crearDemoPaciente(String nombre, String phone) {
-        Paciente p = new Paciente();
-        p.setNombre(nombre);
-        p.setPhone(phone);
-        p.setActivo(true);
-        p.setRut(nombre.replace(" ", "") + "-" + (int) (Math.random() * 9));
-        p.setAge(50);
-        return p;
+        // Reutilizar paciente demo existente para evitar duplicados
+        return pacienteRepository.findByNombre(nombre)
+                .map(existing -> {
+                    existing.setPhone(phone);
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    Paciente p = new Paciente();
+                    p.setNombre(nombre);
+                    p.setPhone(phone);
+                    p.setActivo(true);
+                    p.setRut(nombre.replace(" ", "") + "-" + (int) (Math.random() * 9));
+                    p.setAge(50);
+                    return p;
+                });
     }
 
     private void generarAlerta(Paciente paciente, String tipo, String descripcion) {

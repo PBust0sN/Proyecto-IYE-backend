@@ -20,4 +20,6 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Paciente p WHERE p.id = :id")
     Optional<Paciente> findByIdForUpdate(@Param("id") Long id);
+
+    Optional<Paciente> findByNombre(String nombre);
 }
