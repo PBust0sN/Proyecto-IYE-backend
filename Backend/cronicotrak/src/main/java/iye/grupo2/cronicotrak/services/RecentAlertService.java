@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class RecentAlertService {
     private final AlertaRepository alertaRepository;
     private final PacientePatologiaRepository pacientePatologiaRepository;
 
+    @Transactional(readOnly = true)
     public List<RecentAlertDto> getTodayAlerts() {
         LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = startOfDay.plusDays(1);
