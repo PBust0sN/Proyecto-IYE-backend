@@ -23,27 +23,29 @@ public class RecentAlertService {
         LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = startOfDay.plusDays(1);
         List<Alerta> alertas = alertaRepository.findTodayAlerts(startOfDay, endOfDay);
-        
+
         return alertas.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     private RecentAlertDto convertToDto(Alerta alerta) {
+        Long patientId = alerta.getPaciente().getId();
         String patientName = alerta.getPaciente().getNombre();
-        
+
         // Obtener la primera patología del paciente
-        List<PacientePatologia> patologias = pacientePatologiaRepository.findByPacienteId(alerta.getPaciente().getId());
+        List<PacientePatologia> patologias = pacientePatologiaRepository.findByPacienteId(patientId);
         String condition = patologias.isEmpty() ? "Sin diagnóstico" : patologias.get(0).getPatologia().getNombre();
-        
+
         // Determinar prioridad basada en el tipo de alerta
         String priority = determinePriority(alerta.getTipo());
-        
+
         // Calcular tiempo transcurrido
         String timeAgo = calculateTimeAgo(alerta.getFecha());
-        
+
         return RecentAlertDto.builder()
                 .id(alerta.getId())
+                .patientId(patientId)
                 .patientName(patientName)
                 .type(alerta.getTipo())
                 .description(alerta.getDescripcion())
@@ -56,7 +58,7 @@ public class RecentAlertService {
         if (alertType == null) {
             return "medium";
         }
-        
+
         switch (alertType.toLowerCase()) {
             case "critica":
             case "critical":
@@ -82,12 +84,12 @@ public class RecentAlertService {
         if (fecha == null) {
             return "Desconocido";
         }
-        
+
         LocalDateTime now = LocalDateTime.now();
         long minutes = ChronoUnit.MINUTES.between(fecha, now);
         long hours = ChronoUnit.HOURS.between(fecha, now);
         long days = ChronoUnit.DAYS.between(fecha, now);
-        
+
         if (minutes < 1) {
             return "Hace unos segundos";
         } else if (minutes < 60) {

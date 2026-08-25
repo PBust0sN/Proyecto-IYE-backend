@@ -434,21 +434,20 @@ INSERT INTO "usuario" ("id", "nombre", "email", "password", "rol", "establecimie
 
 
 SET session_replication_role = 'origin';
- 
- - -   A j u s t e   d e   s e c u e n c i a s   p a r a   S E R I A L  
- S E L E C T   s e t v a l ( ' e s t a b l e c i m i e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   e s t a b l e c i m i e n t o ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' u s u a r i o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   u s u a r i o ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' p a c i e n t e _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' p a t o l o g i a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a t o l o g i a ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' p a c i e n t e _ p a t o l o g i a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e _ p a t o l o g i a ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' c o n t r o l _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   c o n t r o l ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' i n d i c a d o r _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   i n d i c a d o r ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' m e d i c i o n _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   m e d i c i o n ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' a l e r t a _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   a l e r t a ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' r e c o r d a t o r i o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   r e c o r d a t o r i o ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' m e d i c a m e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   m e d i c a m e n t o ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' p a c i e n t e _ m e d i c a m e n t o _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p a c i e n t e _ m e d i c a m e n t o ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' p r e d i c c i o n _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   p r e d i c c i o n ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' s i n c r o n i z a c i o n _ o f f l i n e _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   s i n c r o n i z a c i o n _ o f f l i n e ) ,   1 ) ) ;  
- S E L E C T   s e t v a l ( ' i n t e g r a c i o n _ l o g _ i d _ s e q ' ,   C O A L E S C E ( ( S E L E C T   M A X ( i d )   F R O M   i n t e g r a c i o n _ l o g ) ,   1 ) ) ;  
- 
+
+-- Ajuste de secuencias para SERIAL
+SELECT setval('establecimiento_id_seq', COALESCE((SELECT MAX(id) FROM establecimiento), 1));
+SELECT setval('usuario_id_seq', COALESCE((SELECT MAX(id) FROM usuario), 1));
+SELECT setval('paciente_id_seq', COALESCE((SELECT MAX(id) FROM paciente), 1));
+SELECT setval('patologia_id_seq', COALESCE((SELECT MAX(id) FROM patologia), 1));
+SELECT setval('paciente_patologia_id_seq', COALESCE((SELECT MAX(id) FROM paciente_patologia), 1));
+SELECT setval('control_id_seq', COALESCE((SELECT MAX(id) FROM control), 1));
+SELECT setval('indicador_id_seq', COALESCE((SELECT MAX(id) FROM indicador), 1));
+SELECT setval('medicion_id_seq', COALESCE((SELECT MAX(id) FROM medicion), 1));
+SELECT setval('alerta_id_seq', COALESCE((SELECT MAX(id) FROM alerta), 1));
+SELECT setval('recordatorio_id_seq', COALESCE((SELECT MAX(id) FROM recordatorio), 1));
+SELECT setval('medicamento_id_seq', COALESCE((SELECT MAX(id) FROM medicamento), 1));
+SELECT setval('paciente_medicamento_id_seq', COALESCE((SELECT MAX(id) FROM paciente_medicamento), 1));
+SELECT setval('prediccion_id_seq', COALESCE((SELECT MAX(id) FROM prediccion), 1));
+SELECT setval('sincronizacion_offline_id_seq', COALESCE((SELECT MAX(id) FROM sincronizacion_offline), 1));
+SELECT setval('integracion_log_id_seq', COALESCE((SELECT MAX(id) FROM integracion_log), 1));
