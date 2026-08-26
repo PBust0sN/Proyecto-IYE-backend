@@ -33,6 +33,7 @@ public class MedicalRecordService {
     private final ControlRepository controlRepository;
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("d/M/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     // -------------------------------------------------------
     // GET: construye el DTO completo de ficha médica
@@ -61,13 +62,10 @@ public class MedicalRecordService {
                             .collect(Collectors.toList());
 
                     // Controles
-                    String lastVisit = controlRepository.findLastControlByPacienteId(patientId)
-                            .map(c -> formatDate(c.getFechaReal()))
-                            .orElse(null);
-
-                    String nextVisit = controlRepository.findNextControlByPacienteId(patientId, LocalDate.now())
-                            .map(c -> formatDate(c.getFechaProgramada()))
-                            .orElse(null);
+                    String lastVisit = paciente.getLastVisit() != null ? paciente.getLastVisit().format(DATE_FORMATTER)
+                            : null;
+                    String nextVisit = paciente.getNextVisit() != null ? paciente.getNextVisit().format(DATE_FORMATTER)
+                            : null;
 
                     return MedicalRecordDTO.builder()
                             .idPatient(paciente.getId())
@@ -115,15 +113,18 @@ public class MedicalRecordService {
                     if (dto.getCondition() != null) {
                         dto.getCondition().forEach(pathDto -> {
                             pacientePatologiaRepository.findByPacienteId(patientId).stream()
-                                    .filter(rel -> rel.getPatologia() != null && rel.getPatologia().getId().equals(pathDto.getId()))
+                                    .filter(rel -> rel.getPatologia() != null
+                                            && rel.getPatologia().getId().equals(pathDto.getId()))
                                     .findFirst()
                                     .ifPresent(rel -> {
                                         rel.setNotas(pathDto.getNotes());
                                         if (pathDto.getLastUpdate() != null) {
                                             try {
-                                                rel.setFechaUltimoControl(LocalDate.parse(pathDto.getLastUpdate(), DATE_FMT));
+                                                rel.setFechaUltimoControl(
+                                                        LocalDate.parse(pathDto.getLastUpdate(), DATE_FMT));
                                             } catch (DateTimeParseException e) {
-                                                LOGGER.warn("Invalid lastUpdate date '{}' for patient {}", pathDto.getLastUpdate(), patientId);
+                                                LOGGER.warn("Invalid lastUpdate date '{}' for patient {}",
+                                                        pathDto.getLastUpdate(), patientId);
                                             }
                                         }
                                         pacientePatologiaRepository.save(rel);
@@ -131,7 +132,8 @@ public class MedicalRecordService {
                                         // Actualiza la última medición de cada indicador
                                         if (pathDto.getIndicators() != null) {
                                             pathDto.getIndicators().forEach(indDto -> {
-                                                medicionRepository.findLatestByPacienteIdAndIndicadorId(patientId, indDto.getId())
+                                                medicionRepository
+                                                        .findLatestByPacienteIdAndIndicadorId(patientId, indDto.getId())
                                                         .ifPresent(m -> {
                                                             m.setValor(indDto.getQuantity());
                                                             m.setFecha(LocalDate.now());
@@ -200,17 +202,19 @@ public class MedicalRecordService {
 
     /**
      * Calcula el estado del indicador según los rangos:
-     *  - Controlado: dentro del rango [lower, upper]
-     *  - En Observación: ligeramente fuera del rango (≤10%)
-     *  - Crítico: muy fuera del rango (>10%)
+     * - Controlado: dentro del rango [lower, upper]
+     * - En Observación: ligeramente fuera del rango (≤10%)
+     * - Crítico: muy fuera del rango (>10%)
      */
     private String calculateState(BigDecimal quantity, BigDecimal lower, BigDecimal upper) {
-        if (quantity == null) return null;
+        if (quantity == null)
+            return null;
 
         boolean belowLower = lower != null && quantity.compareTo(lower) < 0;
         boolean aboveUpper = upper != null && quantity.compareTo(upper) > 0;
 
-        if (!belowLower && !aboveUpper) return "Controlado";
+        if (!belowLower && !aboveUpper)
+            return "Controlado";
 
         // Calcula desviación porcentual para diferenciar En Observación vs Crítico
         if (belowLower && lower != null && lower.compareTo(BigDecimal.ZERO) != 0) {

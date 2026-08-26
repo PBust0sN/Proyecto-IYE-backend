@@ -60,7 +60,7 @@ public class AlertaController {
     /**
      * Updates an existing alert.
      *
-     * @param id the ID of the alert to update
+     * @param id     the ID of the alert to update
      * @param entity the updated alert data
      * @return the updated alert, or 404 if not found
      */
@@ -103,6 +103,12 @@ public class AlertaController {
     @GetMapping("/get/recent/alerts")
     public ResponseEntity<List<RecentAlertDto>> getRecentAlerts() {
         List<RecentAlertDto> alerts = recentAlertService.getTodayAlerts();
+        return ResponseEntity.ok(alerts);
+    }
+
+    @GetMapping("/get/alerts")
+    public ResponseEntity<List<RecentAlertDto>> getAllAlerts() {
+        List<RecentAlertDto> alerts = recentAlertService.getAllAlerts();
         return ResponseEntity.ok(alerts);
     }
 

@@ -31,6 +31,14 @@ public class RecentAlertService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<RecentAlertDto> getAllAlerts() {
+        List<Alerta> alertas = alertaRepository.findAll();
+        return alertas.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     private RecentAlertDto convertToDto(Alerta alerta) {
         Long patientId = alerta.getPaciente().getId();
         String patientName = alerta.getPaciente().getNombre();
