@@ -68,15 +68,8 @@ public class PacienteService {
                 ? Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears()
                 : null;
 
-        String lastVisit = controlRepository.findLastControlByPacienteId(paciente.getId())
-                .filter(c -> c.getFechaReal() != null)
-                .map(c -> c.getFechaReal().format(DATE_FORMATTER))
-                .orElse(null);
-
-        String nextVisit = controlRepository.findNextControlByPacienteId(paciente.getId(), LocalDate.now())
-                .filter(c -> c.getFechaProgramada() != null)
-                .map(c -> c.getFechaProgramada().format(DATE_FORMATTER))
-                .orElse(null);
+        String lastVisit = paciente.getLastVisit() != null ? paciente.getLastVisit().format(DATE_FORMATTER) : null;
+        String nextVisit = paciente.getNextVisit() != null ? paciente.getNextVisit().format(DATE_FORMATTER) : null;
 
         return GETPatient.builder()
                 .id(paciente.getId())
